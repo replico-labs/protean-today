@@ -1,0 +1,96 @@
+# protean-site — Landing Page & Docs
+
+The public-facing marketing and documentation site for Protean —
+the governance layer for social messengers.
+
+## What this is
+
+A single, self-contained static HTML page (`index.html`) covering two
+things:
+
+- **Home** — what Protean is, how it works, the ten governance models
+  plus Opportunity Market, the five use cases, where it's deployed, and
+  a "Get started" section linking to the live bots.
+- **Docs** — architecture, a full writeup of every governance model,
+  Opportunity Market, the Guard Wrapper, the complete command
+  reference, and real, verified factory contract addresses per chain.
+
+No React, no build step, no bundler — plain HTML/CSS/JS, with Google
+Fonts (Inter + JetBrains Mono) loaded via `<link>`. This was a
+deliberate choice: this site has no wallet-connect flow, no backend
+data of its own, and no interactivity beyond switching between two
+views and smooth-scrolling to an anchor — a full framework would be
+more machinery than the actual job needs.
+
+## Brand
+
+Colors, type, and the logo (`public/logo-mark.svg`,
+`public/logo-wordmark.svg`, `public/favicon.svg`) all match the
+project's real, established identity — deep violet background
+(`#12072a`), lilac accent (`#b39cf5`), a classical column/temple mark.
+If the brand changes, the color tokens are all defined once, at the
+top of `index.html`'s `<style>` block, under `:root`.
+
+## Running it locally
+
+No install or build step needed:
+
+```bash
+python -m http.server 8000
+```
+
+or open `index.html` directly in a browser. Either works, since there's
+no server-side logic at all.
+
+## Deploying
+
+Built for Vercel as a plain static site — no framework, no build
+command. `vercel.json` explicitly sets `framework: null` and
+`buildCommand: null` so Vercel's zero-config detection doesn't get
+confused by the `public/` folder (a common convention for build output
+in other frameworks) into looking for a compiled site that doesn't
+exist here.
+
+Deploy via the Vercel dashboard (import the repo) or the CLI:
+
+```bash
+npx vercel --prod
+```
+
+Any other static host (Netlify, GitHub Pages) would also work directly
+off `index.html` with no changes.
+
+## Updating content
+
+Everything — copy, the command reference, chain addresses — lives
+directly in `index.html`. There's no CMS or data file to edit
+separately. Search for the relevant section by its `id` (`#models`,
+`#applications`, `#bots`, `#chains`, `#doc-commands`, etc.) and edit
+the HTML in place.
+
+### Adding a chain's factory addresses
+
+Each verified address in the docs' "Chains & contracts" table links
+directly to that chain's block explorer (e.g.
+`https://testnet.monadvision.com/address/<address>` for Monad). When
+adding Base or HyperEVM addresses once they're deployed, confirm the
+real explorer URL for that specific chain first — don't guess or reuse
+Monad's pattern blindly, since each chain's explorer has its own
+domain and URL shape.
+
+### Bot links
+
+The three platform cards in `#bots` (Telegram, Discord, Slack) show a
+live, clickable "Add to Telegram" button once a real URL exists for
+that platform, and a muted "coming soon" placeholder otherwise. Swap a
+platform's placeholder `<span class="bot-cta">` for a real
+`<a class="bot-cta live" href="...">` once its bot link exists — see
+Telegram's card for the working example.
+
+## Related repositories
+
+- **Governance contracts** (Solidity, Foundry)
+- **Bot** (Node.js — Telegram, Discord, Slack interfaces)
+- **protean-connect** — a separate, paused project for non-custodial
+  wallet linking via Privy; not currently used by the bot, unrelated
+  to this site

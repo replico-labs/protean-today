@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Protean — Chat-native governance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    box-sizing: border-box;
+    --bg: #12072A;
+    --panel: #1C1038;
+    --panel-2: #241546;
+    --border: #2F2255;
+    --text: #F1EDFB;
+    --text-dim: #A49CC2;
+    --accent: #B39CF5;
+    --accent-soft: rgba(179, 156, 245, 0.15);
+    --ok: #4ADE80;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html { scroll-padding-top: calc(88px + env(safe-area-inset-top, 0px)); scroll-behavior: smooth; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: 'Inter', sans-serif; font-weight: 600; letter-spacing: -0.01em; }
+  code, .mono { font-family: 'JetBrains Mono', monospace; }
+  a { color: inherit; }
+  ::selection { background: var(--accent); color: var(--bg); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+  @media (max-width: 640px) { .wrap { padding: 0 20px; } }
+
+  nav.topnav {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40;
+    background: rgba(18,7,42,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topnav-inner { max-width: 1080px; margin: 0 auto; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .brand svg.mark { height: 26px; width: auto; display: block; }
+  .brand svg.word { height: 13px; width: auto; display: block; }
+  .navlinks { display: flex; gap: 28px; align-items: center; font-size: 15px; }
+  .navlinks button { background: none; border: none; color: var(--text-dim); font: inherit; cursor: pointer; padding: 6px 0; }
+  .navlinks button.active { color: var(--text); border-bottom: 1px solid var(--accent); }
+  .navlinks button:hover { color: var(--text); }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  .hero { padding: 96px 0 72px; border-bottom: 1px solid var(--border); }
+  @media (max-width: 640px) { .hero { padding: 56px 0 48px; } }
+  .hero h1 { font-size: clamp(38px, 6vw, 62px); line-height: 1.1; margin: 0 0 28px; max-width: 760px; }
+  .cycle-word { color: var(--accent); display: inline-block; min-width: 1ch; }
+  .hero p.sub { font-size: 19px; color: var(--text-dim); max-width: 560px; margin: 0 0 40px; }
+  .cta-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn { display: inline-block; padding: 13px 22px; font-size: 15px; font-weight: 600; border-radius: 10px; text-decoration: none; cursor: pointer; border: 1px solid var(--border); color: var(--text); background: none; font-family: inherit; }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn:hover { border-color: var(--text-dim); }
+
+  section.block { padding: 72px 0; border-bottom: 1px solid var(--border); }
+  @media (max-width: 640px) { section.block { padding: 48px 0; } }
+  .block h2 { font-size: clamp(24px, 3.2vw, 32px); margin: 0 0 12px; max-width: 620px; }
+  .block .lede { color: var(--text-dim); max-width: 560px; margin: 0 0 40px; font-size: 16px; }
+
+  .steps { counter-reset: step; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--border); }
+  @media (max-width: 860px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
+  .step { padding: 24px 24px 24px 0; border-right: 1px solid var(--border); }
+  .step:last-child { border-right: none; }
+  @media (max-width: 860px) { .step:nth-child(2n) { border-right: none; } .step:nth-child(2n+1) { border-right: 1px solid var(--border); } }
+  .step::before { counter-increment: step; content: counter(step, decimal-leading-zero); display: block; font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 13px; margin-bottom: 10px; }
+  .step h3 { font-size: 17px; margin: 0 0 8px; font-weight: 600; }
+  .step p { color: var(--text-dim); font-size: 14.5px; margin: 0; }
+
+  .model-list { border-top: 1px solid var(--border); }
+  .model-row { display: grid; grid-template-columns: 200px 1fr 90px; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--border); align-items: baseline; }
+  @media (max-width: 700px) { .model-row { grid-template-columns: 1fr; gap: 6px; } }
+  .model-row .name { font-size: 18px; font-weight: 600; }
+  .model-row .desc { color: var(--text-dim); font-size: 14.5px; }
+  .model-row .tag { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); text-align: right; }
+  @media (max-width: 700px) { .model-row .tag { text-align: left; } }
+
+  .usecase-list { border-top: 1px solid var(--border); }
+  .usecase { display: grid; grid-template-columns: 260px 1fr; gap: 32px; padding: 28px 0; border-bottom: 1px solid var(--border); }
+  @media (max-width: 760px) { .usecase { grid-template-columns: 1fr; gap: 10px; } }
+  .usecase h3 { font-size: 18px; margin: 0; font-weight: 600; }
+  .usecase .offer { color: var(--text-dim); font-size: 14.5px; }
+  .usecase .offer b { color: var(--text); font-weight: 500; }
+
+  .chain-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  @media (max-width: 700px) { .chain-grid { grid-template-columns: 1fr; } }
+  .chain-cell { background: var(--panel); padding: 24px; }
+  .chain-cell h3 { font-size: 16px; margin: 0 0 4px; font-weight: 600; }
+  .chain-cell .role { color: var(--accent); font-size: 13px; margin-bottom: 14px; }
+  .chain-cell .addr { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--text-dim); word-break: break-all; }
+  .chain-cell .addr.pending { font-style: italic; }
+  .chain-cell .status { display: inline-block; font-size: 11px; font-family: 'JetBrains Mono', monospace; padding: 2px 8px; border-radius: 20px; margin-bottom: 10px; }
+  .status.live { background: rgba(74,222,128,0.15); color: var(--ok); }
+  .status.pending { background: var(--accent-soft); color: var(--accent); }
+
+  footer { padding: 40px 0 calc(40px + env(safe-area-inset-bottom, 0px)); }
+  footer .foot-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; color: var(--text-dim); font-size: 13.5px; }
+  .foot-links { display: flex; gap: 18px; align-items: center; }
+  .foot-links a { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border); color: var(--text-dim); }
+  .foot-links a:hover { color: var(--text); border-color: var(--text-dim); }
+  .foot-links svg { width: 16px; height: 16px; }
+
+  .docs-shell { display: grid; grid-template-columns: 220px 1fr; gap: 56px; padding: 48px 0 96px; align-items: start; }
+  @media (max-width: 860px) { .docs-shell { grid-template-columns: 1fr; gap: 28px; } }
+  .docs-nav { position: sticky; top: calc(88px + env(safe-area-inset-top, 0px)); display: flex; flex-direction: column; gap: 2px; }
+  @media (max-width: 860px) { .docs-nav { position: static; flex-direction: row; flex-wrap: wrap; gap: 14px; } }
+  .docs-nav a { color: var(--text-dim); font-size: 14px; padding: 6px 0; text-decoration: none; border-left: 2px solid transparent; padding-left: 12px; }
+  .docs-nav a:hover, .docs-nav a.active { color: var(--text); border-left-color: var(--accent); }
+  @media (max-width: 860px) { .docs-nav a { border-left: none; border-bottom: 2px solid transparent; padding-left: 0; } .docs-nav a:hover, .docs-nav a.active { border-bottom-color: var(--accent); } }
+
+  .docs-content h2 { font-size: 25px; margin: 0 0 6px; scroll-margin-top: 88px; }
+  .docs-content h2:not(:first-child) { margin-top: 56px; }
+  .docs-content .doc-lede { color: var(--text-dim); margin: 0 0 28px; max-width: 620px; }
+  .docs-content h3 { font-size: 17px; margin: 28px 0 10px; font-weight: 600; }
+  .docs-content h4 { font-size: 14px; margin: 24px 0 8px; color: var(--accent); font-weight: 600; }
+  .docs-content p { color: var(--text-dim); max-width: 640px; font-size: 15px; }
+  .docs-content ul { color: var(--text-dim); font-size: 15px; max-width: 640px; padding-left: 20px; }
+  .docs-content li { margin-bottom: 6px; }
+
+  .cmd-table { width: 100%; border-collapse: collapse; margin: 10px 0 28px; font-size: 14px; }
+  .cmd-table th { text-align: left; color: var(--text-dim); font-weight: 500; font-size: 12.5px; padding: 8px 16px 8px 0; border-bottom: 1px solid var(--border); }
+  .cmd-table td { padding: 11px 16px 11px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .cmd-table code { color: var(--accent); font-size: 13px; white-space: nowrap; }
+  .cmd-table a:hover code { text-decoration: underline; }
+  .cmd-table td:last-child { color: var(--text-dim); }
+
+  .arch-diagram { display: grid; grid-template-columns: 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin: 20px 0 32px; max-width: 640px; }
+  .arch-row { background: var(--panel); padding: 14px 18px; display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+  .arch-row .label { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text); }
+  .arch-row .note { font-size: 13px; color: var(--text-dim); text-align: right; }
+
+  .callout { border-left: 2px solid var(--accent); padding: 4px 0 4px 18px; margin: 20px 0 28px; max-width: 600px; }
+  .callout p { margin: 0; color: var(--text-dim); font-size: 14.5px; }
+
+  .placeholder-note { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); border: 1px dashed var(--border); padding: 3px 8px; border-radius: 20px; }
+
+  /* ---------- BOTS / GET STARTED ---------- */
+  .bot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  @media (max-width: 760px) { .bot-grid { grid-template-columns: 1fr; } }
+  .bot-cell { background: var(--panel); padding: 28px; display: flex; flex-direction: column; gap: 14px; }
+  .bot-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: var(--accent-soft); color: var(--accent); }
+  .bot-icon svg { width: 22px; height: 22px; }
+  .bot-cell h3 { font-size: 17px; margin: 0; font-weight: 600; }
+  .bot-cell p { color: var(--text-dim); font-size: 14.5px; margin: 0; flex: 1; }
+  .bot-cta { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; padding: 10px 16px; border-radius: 10px; border: 1px dashed var(--border); color: var(--text-dim); width: fit-content; }
+  a.bot-cta.live { border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent); text-decoration: none; }
+  a.bot-cta.live:hover { background: var(--accent); color: var(--bg); }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="brand" onclick="showView('home')">
+      <svg class="mark" viewBox="0 0 96 102" role="img" aria-label="Protean">
+        <defs><linearGradient id="protean-lilac" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#F7F3FF"/><stop offset="1" stop-color="#A98BF0"/>
+        </linearGradient></defs>
+        <g fill="url(#protean-lilac)">
+          <path d="M47.9 1.2 L88.4 24.4 Q90.6 25.7 89.3 27.5 L6.5 27.5 Q5.2 25.7 7.4 24.4 L46.1 1.2 Q47 0.7 47.9 1.2 Z"/>
+          <rect x="4.2" y="30.8" width="87.2" height="5" rx="2.5"/>
+          <g id="col"><rect x="8.3" y="39" width="12.4" height="4.6" rx="2.3"/><rect x="9.7" y="41" width="9.6" height="43.8" rx="2.2"/></g>
+          <use href="#col" x="16.6"/><use href="#col" x="33.3"/><use href="#col" x="50"/><use href="#col" x="66.8"/>
+          <rect x="5.5" y="88" width="84.8" height="5" rx="2.5"/>
+          <rect x="0" y="96.5" width="96" height="5.2" rx="2.6"/>
+        </g>
+      </svg>
+      <svg class="word" viewBox="0 0 978 100" role="img" aria-label="Protean">
+        <g fill="#FFFFFF">
+          <path d="M8 100 V8 H64 A26 26 0 0 1 64 60 H8" fill="none" stroke="#FFFFFF" stroke-width="16"/>
+          <g transform="translate(142 0)"><path d="M8 100 V8 H64 A26 26 0 0 1 64 60 H8" fill="none" stroke="#FFFFFF" stroke-width="16"/><polygon points="46,60 68,60 106,100 84,100"/></g>
+          <rect x="298" y="8" width="104" height="84" rx="34" fill="none" stroke="#FFFFFF" stroke-width="16"/>
+          <g transform="translate(454 0)"><rect x="0" y="0" width="96" height="16"/><rect x="40" y="0" width="16" height="100"/></g>
+          <g transform="translate(594 0)"><rect x="0" y="0" width="88" height="16"/><rect x="0" y="42" width="88" height="16"/><rect x="0" y="84" width="88" height="16"/></g>
+          <polygon transform="translate(726 0)" points="0,100 44,0 60,0 104,100 86,100 52,22 18,100"/>
+          <g transform="translate(874 0)"><rect x="0" y="0" width="16" height="100"/><rect x="88" y="0" width="16" height="100"/><polygon points="0,0 20,0 104,100 84,100"/></g>
+        </g>
+      </svg>
+    </div>
+    <div class="navlinks">
+      <button id="nav-home" class="active" onclick="showView('home')">Home</button>
+      <button id="nav-docs" onclick="showView('docs')">Docs</button>
+    </div>
+  </div>
+</nav>
+
+<div id="view-home" class="view active">
+
+  <header class="hero">
+    <div class="wrap">
+      <h1>One treasury.<br>Every shape it needs to take: <span class="cycle-word" id="cycleWord">Quadratic</span>.</h1>
+      <p class="sub">Protean brings programmable, on-chain governance into Telegram, Discord, and Slack — the places your community already coordinates. Eleven mechanisms, one treasury, swap models without ever moving funds.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#bots">Get started</a>
+        <a class="btn" href="#" onclick="showView('docs'); return false;">Read the docs</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="block">
+    <div class="wrap">
+      <h2>Communities are stuck choosing between two broken options.</h2>
+      <p class="lede">Web2 tools make collective ownership difficult — no safe way to pool or spend group money inside a chat app. Web3 frameworks force people out of the chat entirely, onto a separate site, with a treasury permanently welded to one voting contract. Changing your mind about governance means a risky, expensive fund migration.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <h2>How it actually works</h2>
+      <p class="lede">A DAO is created and run entirely from inside the chat — no separate dashboard to log into.</p>
+      <div class="steps">
+        <div class="step"><h3>Create in chat</h3><p>One command deploys a treasury, a governance token, and your chosen model — directly in the group.</p></div>
+        <div class="step"><h3>Pick a model</h3><p>Ten governance mechanisms plus a confidential market, from simple multisig to quadratic and conviction voting.</p></div>
+        <div class="step"><h3>Propose, vote, execute</h3><p>Every step happens as a normal message in the chat everyone's already in.</p></div>
+        <div class="step"><h3>Swap models, keep funds</h3><p>Outgrow a model later? Change it. The treasury never moves.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="models">
+    <div class="wrap">
+      <h2>Ten governance models, one confidential market</h2>
+      <p class="lede">The ten share the same propose → vote → queue → execute shape. Opportunity Market is a distinct primitive — no proposals or votes, a fully confidential prediction market instead.</p>
+      <div class="model-list">
+        <div class="model-row"><div class="name">Token-weighted</div><div class="desc">The baseline: one token, one vote, weighted by balance at a fixed snapshot.</div><div class="tag">standard</div></div>
+        <div class="model-row"><div class="name">Quadratic</div><div class="desc">Voting power grows with the square root of tokens held, softening whale influence.</div><div class="tag">weighted</div></div>
+        <div class="model-row"><div class="name">Liquid</div><div class="desc">Token-weighted voting with delegation — hand your vote to someone you trust, per topic or always.</div><div class="tag">delegated</div></div>
+        <div class="model-row"><div class="name">Optimistic</div><div class="desc">Proposals pass by default unless challenged within a window — speed for routine decisions, a real vote only when contested.</div><div class="tag">fast-path</div></div>
+        <div class="model-row"><div class="name">Conviction</div><div class="desc">No discrete vote — support accumulates the longer your stake stays committed to a proposal.</div><div class="tag">continuous</div></div>
+        <div class="model-row"><div class="name">Board</div><div class="desc">A signer multisig — no token at all, just confirmations from a fixed set of trusted signers.</div><div class="tag">multisig</div></div>
+        <div class="model-row"><div class="name">Sortition</div><div class="desc">A council chosen at random from eligible members, serving fixed terms — jury duty for governance.</div><div class="tag">randomized</div></div>
+        <div class="model-row"><div class="name">Delegate</div><div class="desc">An elected council serving fixed terms, chosen by ordinary token-holder vote.</div><div class="tag">elected</div></div>
+        <div class="model-row"><div class="name">Sowellian</div><div class="desc">Proposals open for a market-style approval phase, then adjudicate disputed outcomes — with optional live price-feed resolution.</div><div class="tag">two-phase</div></div>
+        <div class="model-row"><div class="name">Decision Markets</div><div class="desc">Futarchy: two prediction markets, pass vs. fail, resolved by comparing price over time. No voting at all.</div><div class="tag">market-based</div></div>
+        <div class="model-row"><div class="name">Opportunity Market</div><div class="desc">Confidential prediction surveys — place fully encrypted bets; only the winning outcome and its total backing are ever revealed.</div><div class="tag">confidential</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="applications">
+    <div class="wrap">
+      <h2>Built for how real groups actually organize</h2>
+      <p class="lede">Five shapes Protean already fits, each with its own tools on top of the same governance layer.</p>
+      <div class="usecase-list">
+        <div class="usecase"><h3>DAO Associations</h3><div class="offer">Online communities that need a shared treasury and real coordination. <b>Messenger-native interaction, governance tools, association registration (Wyoming DUNA or Marshall Islands nonprofit DAO LLC), accounting, and banking tools.</b></div></div>
+        <div class="usecase"><h3>Private Escrow Groups</h3><div class="offer">NFT/token OTC trading and gig-economy deals. <b>Secure fund escrow, permissioned groups that cut impersonation risk, and withdrawals straight to a bank account.</b></div></div>
+        <div class="usecase"><h3>Private Opportunity Surveys</h3><div class="offer">Businesses and investment groups consulting scouts who can't risk a leak. <b>Confidential survey tools, process and results analytics, and researcher reward tools</b> — powered by Protean's confidential Opportunity Market.</div></div>
+        <div class="usecase"><h3>Optimistic Treasury Management</h3><div class="offer">Foundations and nonprofits making regular operational payments. <b>Built-in oversight and accounting, plus association registration and banking tools.</b></div></div>
+        <div class="usecase"><h3>Private Decision Markets</h3><div class="offer">DAO corporations and funds that want market-driven decisions. <b>Sowellian and futarchy tooling, outcome verification, accounting, and for-profit Marshall Islands DAO LLC registration.</b></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="bots">
+    <div class="wrap">
+      <h2>Get started</h2>
+      <p class="lede">Add Protean to the platform your community already lives in.</p>
+      <div class="bot-grid">
+        <div class="bot-cell">
+          <div class="bot-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M21 4L3 11.5L9.5 13.5M21 4L17.5 20L9.5 13.5M21 4L9.5 13.5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+          <h3>Telegram</h3>
+          <p>Add Protean to a group and govern right in the chat.</p>
+          <a class="bot-cta live" href="https://t.me/proteandao_bot" target="_blank" rel="noreferrer">Add to Telegram</a>
+        </div>
+        <div class="bot-cell">
+          <div class="bot-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="6" width="16" height="12" rx="4" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="12" r="1.3" fill="currentColor"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/><path d="M8 4.5L9.5 6M16 4.5L14.5 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+          <h3>Discord</h3>
+          <p>Bring proposals and votes into your community server.</p>
+          <span class="bot-cta">Add to Discord — coming soon</span>
+        </div>
+        <div class="bot-cell">
+          <div class="bot-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="4" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.6"/><rect x="4" y="13" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="13" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <h3>Slack</h3>
+          <p>Run governance from your team's workspace.</p>
+          <span class="bot-cta">Add to Slack — coming soon</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="chains">
+    <div class="wrap">
+      <h2>Where it runs</h2>
+      <p class="lede">Governance runs on ultra-cheap EVMs. The confidential Opportunity Market runs wherever Zama's coprocessor network actually exists today.</p>
+      <div class="chain-grid">
+        <div class="chain-cell">
+          <div class="status live">live · testnet</div>
+          <h3>Monad</h3>
+          <div class="role">Governance — all ten models</div>
+          <div class="addr">10 verified factory contracts — <a href="#" onclick="showView('docs'); setTimeout(() => document.getElementById('doc-chains').scrollIntoView(), 50); return false;" style="text-decoration:underline">see addresses</a></div>
+        </div>
+        <div class="chain-cell">
+          <div class="status pending">deployed</div>
+          <h3>Base</h3>
+          <div class="role">Governance</div>
+          <div class="addr pending">Factory addresses — added on deployment</div>
+        </div>
+        <div class="chain-cell">
+          <div class="status pending">deployed</div>
+          <h3>HyperEVM</h3>
+          <div class="role">Governance</div>
+          <div class="addr pending">Factory addresses — added on deployment</div>
+        </div>
+        <div class="chain-cell">
+          <div class="status live">live · testnet</div>
+          <h3>Ethereum (Sepolia)</h3>
+          <div class="role">Opportunity Market</div>
+          <div class="addr"><a href="https://sepolia.etherscan.io/address/0xe61C9d371D3BEA6ceA5359E745593D8ebB39BEC5" target="_blank" rel="noreferrer" style="color:var(--accent)">Verified factory contract →</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap foot-inner">
+      <div>Protean — the governance layer for social messengers.</div>
+      <div class="foot-links">
+        <a href="https://x.com/proteandaos" target="_blank" rel="noreferrer" aria-label="X (Twitter)">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M17.5 3H20.5L14.3 10.1L21.5 21H15.9L11.5 14.7L6.4 21H3.4L10.1 13.4L3.2 3H8.9L12.9 8.8L17.5 3Z" fill="currentColor"/></svg>
+        </a>
+        <a href="https://github.com/replico-labs" target="_blank" rel="noreferrer" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.5 2 2 6.6 2 12.2C2 16.7 4.9 20.5 8.9 21.8C9.4 21.9 9.6 21.6 9.6 21.3C9.6 21.1 9.6 20.4 9.6 19.6C6.7 20.3 6.1 18.2 6.1 18.2C5.6 17 5 16.7 5 16.7C4.1 16.1 5.1 16.1 5.1 16.1C6.1 16.2 6.7 17.1 6.7 17.1C7.6 18.6 9 18.2 9.5 17.9C9.6 17.3 9.8 16.9 10.1 16.6C7.8 16.4 5.4 15.5 5.4 11.6C5.4 10.5 5.8 9.6 6.4 8.9C6.3 8.6 6 7.6 6.5 6.3C6.5 6.3 7.3 6 9.6 7.6C10.6 7.3 11.6 7.2 12.6 7.2C13.6 7.2 14.6 7.3 15.6 7.6C17.9 6 18.7 6.3 18.7 6.3C19.2 7.6 18.9 8.6 18.8 8.9C19.4 9.6 19.8 10.5 19.8 11.6C19.8 15.5 17.4 16.4 15.1 16.6C15.5 16.9 15.8 17.6 15.8 18.6C15.8 20 15.8 21 15.8 21.3C15.8 21.6 16 21.9 16.5 21.8C20.5 20.5 23.4 16.7 23.4 12.2C23.4 6.6 18.5 2 12 2Z" fill="currentColor"/></svg>
+        </a>
+        <a href="mailto:replicolabs@gmail.com" aria-label="Email">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 6.5L12 13L20 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+      <div>© 2026 Replico Labs</div>
+    </div>
+  </footer>
+
+</div>
+
+<div id="view-docs" class="view">
+  <div class="wrap docs-shell">
+    <nav class="docs-nav" id="docsNav">
+      <a href="#doc-overview">Overview</a>
+      <a href="#doc-architecture">Architecture</a>
+      <a href="#doc-models">Governance models</a>
+      <a href="#doc-opportunity">Opportunity Market</a>
+      <a href="#doc-guard">Guard Wrapper</a>
+      <a href="#doc-commands">Commands</a>
+      <a href="#doc-chains">Chains &amp; contracts</a>
+    </nav>
+
+    <div class="docs-content">
+
+      <h2 id="doc-overview">Overview</h2>
+      <p class="doc-lede">Protean is the governance layer for social messengers — programmable, on-chain governance mechanisms brought directly into Telegram, Discord, and Slack.</p>
+      <p>Instead of forcing every community into the same governance model, Protean provides modular governance primitives that deploy directly inside the chat a community already uses. A DAO's treasury and its voting logic are deliberately separate — a group can change how it decides things without ever migrating funds.</p>
+
+      <h2 id="doc-architecture">Architecture</h2>
+      <p class="doc-lede">Three parts: the governance contracts, the bot interfaces, and this site.</p>
+      <div class="arch-diagram">
+        <div class="arch-row"><span class="label">contracts</span><span class="note">Solidity — one factory per governance model, deployed with Foundry</span></div>
+        <div class="arch-row"><span class="label">bot</span><span class="note">Node.js — handles all interaction and transaction execution on Telegram, Discord, and Slack</span></div>
+        <div class="arch-row"><span class="label">connect</span><span class="note">This site — onboarding for people integrating the bot</span></div>
+      </div>
+      <p>Every DAO gets its own, fully separate contract deployment — a real Governance contract, a real Treasury, a real governance token. Nothing is a shared proxy; each community's DAO is independent from every other.</p>
+      <div class="callout"><p>Two optional wrapper contracts sit alongside a DAO: an NFT marketplace wrapper for on-chain trading, and a Guard Wrapper — a security-council layer that can inspect and confirm sensitive treasury or token actions before they execute.</p></div>
+
+      <h2 id="doc-models">Governance models</h2>
+      <p class="doc-lede">All ten share the same propose → vote → queue → execute shape.</p>
+      <h3>Token-weighted</h3>
+      <p>The baseline model. Voting power is read from a snapshot at proposal creation, weighted by balance.</p>
+      <h3>Quadratic</h3>
+      <p>Same shape as token-weighted, but voting power scales with the square root of tokens held — reducing the influence of the largest holders relative to the wider group.</p>
+      <h3>Liquid</h3>
+      <p>Token-weighted voting with delegation. A holder can hand their voting power to someone else, and reclaim it at any time.</p>
+      <h3>Optimistic</h3>
+      <p>A proposal passes automatically once its challenge window closes, unless someone challenges it — in which case it goes to a real vote. Built for routine actions that shouldn't need a full vote cycle every time.</p>
+      <h3>Conviction</h3>
+      <p>No discrete "for/against" vote. A holder commits their current stake to a proposal, and their conviction accumulates the longer it stays committed — rewarding sustained, patient support over a single burst of votes.</p>
+      <h3>Board</h3>
+      <p>A signer multisig. No governance token at all — a fixed set of signers confirms transactions directly, with a configurable approval threshold.</p>
+      <h3>Sortition</h3>
+      <p>A council selected at random from eligible members via an external randomness source, serving fixed terms — governance by lottery rather than election or stake.</p>
+      <h3>Delegate</h3>
+      <p>A council elected by ordinary token-holder vote, serving fixed terms before a new election reopens.</p>
+      <h3>Sowellian</h3>
+      <p>A two-phase model: proposals first go through an approval phase, and disputed outcomes move to an adjudication phase — with optional resolution against a live Chainlink or Switchboard price feed.</p>
+      <h3>Decision Markets</h3>
+      <p>Futarchy. Two prediction markets are opened for a proposal — one betting it will pass, one betting it will fail — and the outcome is decided by comparing their time-weighted average price. No voting step exists in this model at all.</p>
+
+      <h2 id="doc-opportunity">Opportunity Market</h2>
+      <p class="doc-lede">A confidential prediction market — a distinct primitive, not a twin of the ten governance models above.</p>
+      <p>Opportunity Market has no proposals and no votes. Its lifecycle is: list an opportunity, place fully encrypted bets on which one will succeed, resolve the outcome, then reveal only the winning opportunity and its aggregate backing total — individual bets and positions are never revealed, even after resolution. Built on Zama's confidential compute stack, currently deployed on Ethereum Sepolia, since that's where Zama's coprocessor network exists today. It moves to other chains as Zama's network expands to them.</p>
+
+      <h2 id="doc-guard">Guard Wrapper</h2>
+      <p class="doc-lede">An optional security layer a DAO can adopt without changing its governance model at all.</p>
+      <p>A Guard Wrapper sits between governance and a DAO's treasury or token contract. Governance can propose an instruction to it, but a small set of signers must confirm before it actually executes — giving a DAO a human circuit-breaker against a malicious or mistaken proposal, without giving those signers any power to act on their own. Signers can only confirm or reject what governance already sent; they can never initiate a transaction themselves.</p>
+
+      <h2 id="doc-commands">Commands</h2>
+      <p class="doc-lede">The full command set. Which ones apply depends on your DAO's governance model — a Board DAO doesn't have <code>/stake</code>, a Delegate DAO doesn't have <code>/support</code>, and so on.</p>
+
+      <h4>Core lifecycle</h4>
+      <table class="cmd-table">
+        <tr><th>Command</th><th>What it does</th></tr>
+        <tr><td><code>/createdao</code></td><td>Deploys a new DAO — treasury, token, and your chosen governance model — directly in this chat.</td></tr>
+        <tr><td><code>/propose</code></td><td>Creates a new proposal for the linked DAO to vote on.</td></tr>
+        <tr><td><code>/vote</code></td><td>Casts a vote on an open proposal (token-weighted, quadratic, liquid, optimistic, delegate).</td></tr>
+        <tr><td><code>/queue</code></td><td>Moves a passed proposal into its execution timelock.</td></tr>
+        <tr><td><code>/execute</code></td><td>Executes a proposal once its timelock has elapsed.</td></tr>
+        <tr><td><code>/cancel</code></td><td>Cancels a proposal before it executes.</td></tr>
+        <tr><td><code>/proposal</code></td><td>Shows a proposal's current state, votes, and timing.</td></tr>
+        <tr><td><code>/stake</code></td><td>Stakes tokens to activate voting power.</td></tr>
+        <tr><td><code>/unstake</code></td><td>Withdraws staked tokens.</td></tr>
+        <tr><td><code>/wallet</code></td><td>Shows your chat-linked wallet address and balance.</td></tr>
+        <tr><td><code>/claim</code></td><td>Claims welcome tokens or amounts owed to you.</td></tr>
+        <tr><td><code>/help</code></td><td>Shows every command available in this specific chat.</td></tr>
+      </table>
+
+      <h4>Model-specific voting</h4>
+      <table class="cmd-table">
+        <tr><th>Command</th><th>Model</th><th>What it does</th></tr>
+        <tr><td><code>/support</code></td><td>Conviction</td><td>Commits your current stake to a proposal, accumulating conviction over time.</td></tr>
+        <tr><td><code>/confirmtransaction</code></td><td>Board</td><td>A signer confirms a proposed transaction.</td></tr>
+        <tr><td><code>/addsigner</code> / <code>/removesigner</code></td><td>Board</td><td>Adds or removes a signer — only via a passed proposal.</td></tr>
+        <tr><td><code>/castcouncilvote</code></td><td>Sortition</td><td>A randomly-selected council member votes on a proposal.</td></tr>
+        <tr><td><code>/voteinelection</code></td><td>Delegate</td><td>Votes for candidates in a council election.</td></tr>
+        <tr><td><code>/declarecandidacy</code></td><td>Delegate</td><td>Declares your candidacy for an open council election.</td></tr>
+        <tr><td><code>/finalizeelection</code></td><td>Delegate</td><td>Finalizes an election once its voting window closes.</td></tr>
+        <tr><td><code>/proposecriteria</code></td><td>Sowellian</td><td>Creates a proposal with oracle-based or human-judged resolution criteria.</td></tr>
+        <tr><td><code>/castapprovalvote</code></td><td>Sowellian</td><td>Votes in a proposal's approval phase.</td></tr>
+        <tr><td><code>/castadjudicationvote</code></td><td>Sowellian</td><td>Votes in a disputed proposal's adjudication phase.</td></tr>
+        <tr><td><code>/deploychainlinkoracle</code></td><td>Sowellian</td><td>Deploys a price-feed adapter for oracle-based resolution.</td></tr>
+        <tr><td><code>/trade</code></td><td>Decision Markets</td><td>Trades in a proposal's pass or fail prediction market.</td></tr>
+        <tr><td><code>/finalizeproposal</code></td><td>Decision Markets</td><td>Resolves a proposal by comparing its two markets' time-weighted price.</td></tr>
+      </table>
+
+      <h4>Verified action library</h4>
+      <table class="cmd-table">
+        <tr><th>Command</th><th>What it does</th></tr>
+        <tr><td><code>/listactions</code></td><td>Shows every verified action this DAO can propose.</td></tr>
+        <tr><td><code>/proposeaction</code></td><td>Proposes a verified action without hand-building calldata yourself.</td></tr>
+      </table>
+
+      <h4>Wrappers</h4>
+      <table class="cmd-table">
+        <tr><th>Command</th><th>What it does</th></tr>
+        <tr><td><code>/deploynftwrapper</code></td><td>Deploys an NFT marketplace wrapper for this DAO.</td></tr>
+        <tr><td><code>/deployguardwrapper</code></td><td>Deploys a Guard Wrapper — a signer-confirmed security layer — for this DAO.</td></tr>
+        <tr><td><code>/registerguardwrapper</code></td><td>Links an already-deployed Guard Wrapper to this chat.</td></tr>
+        <tr><td><code>/handovertowrapper</code></td><td>Computes the proposals that hand Treasury and token control to a Guard Wrapper.</td></tr>
+        <tr><td><code>/guardwrapper</code></td><td>Shows a wrapper's current signers, threshold, and tenure status.</td></tr>
+        <tr><td><code>/instruction</code></td><td>Shows full detail on a pending or resolved wrapper instruction.</td></tr>
+        <tr><td><code>/confirminstruction</code></td><td>A signer confirms a pending wrapper instruction.</td></tr>
+        <tr><td><code>/rejectinstruction</code></td><td>A signer permanently cancels a pending wrapper instruction.</td></tr>
+        <tr><td><code>/revokeconfirmation</code></td><td>A signer withdraws their own earlier confirmation.</td></tr>
+      </table>
+
+      <h4>Opportunity Market</h4>
+      <table class="cmd-table">
+        <tr><th>Command</th><th>What it does</th></tr>
+        <tr><td><code>/createmarket</code></td><td>Deploys a new confidential Opportunity Market.</td></tr>
+        <tr><td><code>/registermarket</code></td><td>Links an already-deployed market to this chat.</td></tr>
+        <tr><td><code>/deposit</code></td><td>Deposits underlying tokens into your confidential balance.</td></tr>
+        <tr><td><code>/listopportunity</code></td><td>Lists a new opportunity for the market.</td></tr>
+        <tr><td><code>/back</code></td><td>Places a fully encrypted bet on an opportunity.</td></tr>
+        <tr><td><code>/resolve</code></td><td>Records which opportunity won, in plaintext.</td></tr>
+        <tr><td><code>/revealwinningtotal</code></td><td>Reveals the winning opportunity's total backing.</td></tr>
+        <tr><td><code>/computereward</code></td><td>Computes your share of the reward pool.</td></tr>
+        <tr><td><code>/withdraw</code> / <code>/withdrawreward</code></td><td>Withdraws your stake or your computed reward.</td></tr>
+        <tr><td><code>/mybalance</code> / <code>/mybet</code> / <code>/allbets</code></td><td>Shows your confidential balance, one bet's detail, or all your bets.</td></tr>
+        <tr><td><code>/analytics</code></td><td>Deployer-only aggregate stats per opportunity.</td></tr>
+      </table>
+
+      <h2 id="doc-chains">Chains &amp; contracts</h2>
+      <p class="doc-lede">Governance runs on ultra-cheap EVMs; Opportunity Market runs wherever Zama's coprocessor network exists today.</p>
+
+      <h3>Monad testnet</h3>
+      <p>All ten governance factories are live and verifiable on <a href="https://testnet.monadvision.com" target="_blank" rel="noreferrer" style="color:var(--accent)">MonadVision</a>, Monad's official block explorer.</p>
+      <table class="cmd-table">
+        <tr><th>Model</th><th>Factory address</th></tr>
+        <tr><td>Token-weighted</td><td><a href="https://testnet.monadvision.com/address/0x8bB68e835032e58c410125e5219B8Ae7FcAcc056" target="_blank" rel="noreferrer"><code>0x8bB6...c056</code></a></td></tr>
+        <tr><td>Quadratic</td><td><a href="https://testnet.monadvision.com/address/0x9d109ba81002B85a48252115Ed5487F6b60C78F9" target="_blank" rel="noreferrer"><code>0x9d10...78F9</code></a></td></tr>
+        <tr><td>Liquid</td><td><a href="https://testnet.monadvision.com/address/0x55C89331FA2F6a71E375c6C2aAf9BbE5b9b17fFe" target="_blank" rel="noreferrer"><code>0x55C8...7fFe</code></a></td></tr>
+        <tr><td>Optimistic</td><td><a href="https://testnet.monadvision.com/address/0x8F5a20c910aEbF287790e04799Ce0DB677705674" target="_blank" rel="noreferrer"><code>0x8F5a...5674</code></a></td></tr>
+        <tr><td>Delegate</td><td><a href="https://testnet.monadvision.com/address/0x3fFb77D2A380C52e04b8d22E73EDc7d47e8f975c" target="_blank" rel="noreferrer"><code>0x3fFb...f975c</code></a></td></tr>
+        <tr><td>Board</td><td><a href="https://testnet.monadvision.com/address/0x2367d102B71ab6c3c3b69eD7580c3Be3ACb5BE9A" target="_blank" rel="noreferrer"><code>0x2367...BE9A</code></a></td></tr>
+        <tr><td>Sortition</td><td><a href="https://testnet.monadvision.com/address/0xBeB038379CD821811ab097308fABF89BcA4bBA7B" target="_blank" rel="noreferrer"><code>0xBeB0...BA7B</code></a></td></tr>
+        <tr><td>Conviction</td><td><a href="https://testnet.monadvision.com/address/0x14439Fa27258c8fd65F5805eA5617774891f173c" target="_blank" rel="noreferrer"><code>0x1443...f173c</code></a></td></tr>
+        <tr><td>Sowellian</td><td><a href="https://testnet.monadvision.com/address/0x075289669Ab8601dd8b15D95551644D511949056" target="_blank" rel="noreferrer"><code>0x0752...9056</code></a></td></tr>
+        <tr><td>Decision Markets</td><td><a href="https://testnet.monadvision.com/address/0x99DeC80E792f9C1fA92F46fe08c6763CBCCfE388" target="_blank" rel="noreferrer"><code>0x99De...fE388</code></a></td></tr>
+      </table>
+
+      <h3>Other chains</h3>
+      <div class="arch-diagram">
+        <div class="arch-row"><span class="label">Base</span><span class="note"><span class="placeholder-note">factory addresses — pending</span></span></div>
+        <div class="arch-row"><span class="label">HyperEVM</span><span class="note"><span class="placeholder-note">factory addresses — pending</span></span></div>
+        <div class="arch-row"><span class="label">Ethereum Sepolia</span><span class="note">Opportunity Market — <a href="https://sepolia.etherscan.io/address/0xe61C9d371D3BEA6ceA5359E745593D8ebB39BEC5" target="_blank" rel="noreferrer" style="color:var(--accent)"><code>0xe61C...BEC5</code></a></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showView(view) {
+    document.getElementById('view-home').classList.toggle('active', view === 'home');
+    document.getElementById('view-docs').classList.toggle('active', view === 'docs');
+    document.getElementById('nav-home').classList.toggle('active', view === 'home');
+    document.getElementById('nav-docs').classList.toggle('active', view === 'docs');
+    window.scrollTo(0, 0);
+  }
+
+  const models = ['Quadratic', 'Conviction', 'Sortition', 'Board', 'Liquid', 'Optimistic', 'Delegate', 'Sowellian', 'Decision Markets', 'Opportunity Market', 'Token-weighted'];
+  let idx = 0;
+  const cycleEl = document.getElementById('cycleWord');
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!prefersReducedMotion) {
+    setInterval(() => {
+      idx = (idx + 1) % models.length;
+      cycleEl.style.opacity = 0;
+      setTimeout(() => { cycleEl.textContent = models[idx]; cycleEl.style.opacity = 1; }, 220);
+    }, 2200);
+    cycleEl.style.transition = 'opacity 220ms ease';
+  }
+
+  const docLinks = Array.from(document.querySelectorAll('#docsNav a'));
+  const docSections = docLinks.map(a => document.querySelector(a.getAttribute('href')));
+  function updateDocsNav() {
+    let current = docSections[0];
+    for (const sec of docSections) {
+      if (sec && sec.getBoundingClientRect().top - 100 <= 0) current = sec;
+    }
+    docLinks.forEach((a, i) => a.classList.toggle('active', docSections[i] === current));
+  }
+  window.addEventListener('scroll', updateDocsNav);
+  updateDocsNav();
+</script>
+
+</body>
+</html>
