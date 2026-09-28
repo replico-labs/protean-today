@@ -80,12 +80,17 @@ domain and URL shape.
 
 ### Bot links
 
-The three platform cards in `#bots` (Telegram, Discord, Slack) show a
-live, clickable "Add to Telegram" button once a real URL exists for
-that platform, and a muted "coming soon" placeholder otherwise. Swap a
-platform's placeholder `<span class="bot-cta">` for a real
-`<a class="bot-cta live" href="...">` once its bot link exists — see
-Telegram's card for the working example.
+All three platform cards in `#bots` (Telegram, Discord, Slack) are live
+and link to their real install/invite URLs. To change a link, edit the
+`href` on that platform's `<a class="bot-cta live">` directly. To add a
+new platform later, copy an existing card and, until its link exists,
+use a muted placeholder instead: `<span class="bot-cta">Add to X —
+coming soon</span>`, then swap it for a real `<a class="bot-cta live"
+href="...">` once the link is ready.
+
+Note that the Discord invite URL contains `&amp;` rather than `&` —
+that's correct HTML for an ampersand inside an attribute, and browsers
+decode it back to a normal `&` when the link is clicked.
 
 ## Related repositories
 
