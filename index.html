@@ -64,6 +64,7 @@
   @media (max-width: 640px) { .hero { padding: 56px 0 48px; } }
   .hero h1 { font-size: clamp(38px, 6vw, 62px); line-height: 1.1; margin: 0 0 28px; max-width: 760px; }
   .cycle-word { color: var(--accent); display: inline-block; min-width: 1ch; }
+  .hero h1 .cycle-word { display: block; width: fit-content; font-size: clamp(28px, 4.4vw, 46px); line-height: 1.15; margin-top: 6px; }
   .hero .platform-line { font-size: clamp(20px, 2.6vw, 28px); color: var(--text-dim); margin: 0 0 24px; font-weight: 500; }
   .hero .platform-line .cycle-word { color: var(--text); }
   .hero p.sub { font-size: 19px; color: var(--text-dim); max-width: 560px; margin: 0 0 40px; }
@@ -209,7 +210,7 @@
 
   <header class="hero">
     <div class="wrap">
-      <h1>One treasury.<br>Every shape it needs to take: <span class="cycle-word" id="cycleWord">Quadratic</span>.</h1>
+      <h1>One treasury.<br>Every governance shape it needs to take: <span class="cycle-word" id="cycleWord">Quadratic.</span></h1>
       <p class="platform-line">Right in your favourite <span class="cycle-word" id="platformCycleWord">Telegram group</span>.</p>
       <p class="sub">Protean brings programmable, on-chain governance into Telegram, Discord, and Slack — the places your community already coordinates. Eleven mechanisms, one treasury, swap models without ever moving funds.</p>
       <div class="cta-row">
@@ -533,7 +534,7 @@
     setInterval(() => {
       idx = (idx + 1) % models.length;
       cycleEl.style.opacity = 0;
-      setTimeout(() => { cycleEl.textContent = models[idx]; cycleEl.style.opacity = 1; }, 220);
+      setTimeout(() => { cycleEl.textContent = models[idx] + '.'; cycleEl.style.opacity = 1; }, 220);
     }, 2200);
     cycleEl.style.transition = 'opacity 220ms ease';
   }
