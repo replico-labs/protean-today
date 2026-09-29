@@ -212,7 +212,7 @@
     <div class="wrap">
       <h1>One treasury.<br>Every governance shape it needs to take: <span class="cycle-word" id="cycleWord">Quadratic.</span></h1>
       <p class="platform-line">Right in your favourite <span class="cycle-word" id="platformCycleWord">Telegram group</span>.</p>
-      <p class="sub">Protean brings programmable, on-chain governance into Telegram, Discord, and Slack — the places your community already coordinates. Eleven mechanisms, one treasury, swap models without ever moving funds.</p>
+      <p class="sub">Protean brings programmable, on-chain governance into Telegram, Discord, and Slack, the places your community already coordinates. Eleven mechanisms, one treasury, swap models without ever moving funds.</p>
       <div class="cta-row">
         <a class="btn btn-primary" href="#bots">Get started</a>
         <a class="btn" href="#" onclick="showView('docs'); return false;">Read the docs</a>
@@ -223,16 +223,18 @@
   <section class="block">
     <div class="wrap">
       <h2>Communities are stuck choosing between two broken options.</h2>
-      <p class="lede">Web2 tools make collective ownership difficult — no safe way to pool or spend group money inside a chat app. Web3 frameworks force people out of the chat entirely, onto a separate site, with a treasury permanently welded to one voting contract. Changing your mind about governance means a risky, expensive fund migration.</p>
+      <p class="lede">Web2 tools make collective ownership difficult, with no safe way to pool or spend group money inside a chat app. Web3 frameworks force people out of the chat entirely, onto a separate site, with a treasury permanently welded to one voting contract. Changing your mind about governance means a risky, expensive fund migration.</p>
+      <p class="lede">Protean removes that trade-off entirely. Governance runs directly inside the chat your community already uses, with no separate site and no new habit to build. Because the treasury and the voting logic are deliberately kept apart, a community can change how it governs as it evolves, moving from a simple multisig to quadratic voting later, without ever touching the funds themselves.</p>
+      <p class="lede">A single approved proposal can already reach real onchain applications atomically, through Protean's verified action library. The next step is doing the same for the offchain side: a compliant banking tool that executes a payment the moment the DAO approves it, no separate manual step required. For communities that need real-world standing, optional legal wrappers, a Wyoming DUNA or a Marshall Islands DAO LLC, turn an onchain treasury into a recognized legal entity.</p>
     </div>
   </section>
 
   <section class="block">
     <div class="wrap">
       <h2>How it actually works</h2>
-      <p class="lede">A DAO is created and run entirely from inside the chat — no separate dashboard to log into.</p>
+      <p class="lede">A DAO is created and run entirely from inside the chat, with no separate dashboard to log into.</p>
       <div class="steps">
-        <div class="step"><h3>Create in chat</h3><p>One command deploys a treasury, a governance token, and your chosen model — directly in the group.</p></div>
+        <div class="step"><h3>Create in chat</h3><p>One command deploys a treasury, a governance token, and your chosen model, directly in the group.</p></div>
         <div class="step"><h3>Pick a model</h3><p>Ten governance mechanisms plus a confidential market, from simple multisig to quadratic and conviction voting.</p></div>
         <div class="step"><h3>Propose, vote, execute</h3><p>Every step happens as a normal message in the chat everyone's already in.</p></div>
         <div class="step"><h3>Swap models, keep funds</h3><p>Outgrow a model later? Change it. The treasury never moves.</p></div>
@@ -243,19 +245,19 @@
   <section class="block" id="models">
     <div class="wrap">
       <h2>Ten governance models, one confidential market</h2>
-      <p class="lede">The ten share the same propose → vote → queue → execute shape. Opportunity Market is a distinct primitive — no proposals or votes, a fully confidential prediction market instead.</p>
+      <p class="lede">The ten share the same propose → vote → queue → execute shape. Opportunity Market is a distinct primitive, with no proposals or votes: a fully confidential prediction market instead.</p>
       <div class="model-list">
         <div class="model-row"><div class="name">Token-weighted</div><div class="desc">The baseline: one token, one vote, weighted by balance at a fixed snapshot.</div><div class="tag">standard</div></div>
         <div class="model-row"><div class="name">Quadratic</div><div class="desc">Voting power grows with the square root of tokens held, softening whale influence.</div><div class="tag">weighted</div></div>
-        <div class="model-row"><div class="name">Liquid</div><div class="desc">Token-weighted voting with delegation — hand your vote to someone you trust, per topic or always.</div><div class="tag">delegated</div></div>
-        <div class="model-row"><div class="name">Optimistic</div><div class="desc">Proposals pass by default unless challenged within a window — speed for routine decisions, a real vote only when contested.</div><div class="tag">fast-path</div></div>
-        <div class="model-row"><div class="name">Conviction</div><div class="desc">No discrete vote — support accumulates the longer your stake stays committed to a proposal.</div><div class="tag">continuous</div></div>
-        <div class="model-row"><div class="name">Board</div><div class="desc">A signer multisig — no token at all, just confirmations from a fixed set of trusted signers.</div><div class="tag">multisig</div></div>
-        <div class="model-row"><div class="name">Sortition</div><div class="desc">A council chosen at random from eligible members, serving fixed terms — jury duty for governance.</div><div class="tag">randomized</div></div>
+        <div class="model-row"><div class="name">Liquid</div><div class="desc">Token-weighted voting with delegation: hand your vote to someone you trust, per topic or always.</div><div class="tag">delegated</div></div>
+        <div class="model-row"><div class="name">Optimistic</div><div class="desc">Proposals pass by default unless challenged within a window, giving speed for routine decisions and a real vote only when contested.</div><div class="tag">fast-path</div></div>
+        <div class="model-row"><div class="name">Conviction</div><div class="desc">No discrete vote: support accumulates the longer your stake stays committed to a proposal.</div><div class="tag">continuous</div></div>
+        <div class="model-row"><div class="name">Board</div><div class="desc">A signer multisig, with no token at all, just confirmations from a fixed set of trusted signers.</div><div class="tag">multisig</div></div>
+        <div class="model-row"><div class="name">Sortition</div><div class="desc">A council chosen at random from eligible members, serving fixed terms, like jury duty for governance.</div><div class="tag">randomized</div></div>
         <div class="model-row"><div class="name">Delegate</div><div class="desc">An elected council serving fixed terms, chosen by ordinary token-holder vote.</div><div class="tag">elected</div></div>
-        <div class="model-row"><div class="name">Sowellian</div><div class="desc">Proposals open for a market-style approval phase, then adjudicate disputed outcomes — with optional live price-feed resolution.</div><div class="tag">two-phase</div></div>
+        <div class="model-row"><div class="name">Sowellian</div><div class="desc">Proposals open for a market-style approval phase, then adjudicate disputed outcomes, with optional live price-feed resolution.</div><div class="tag">two-phase</div></div>
         <div class="model-row"><div class="name">Decision Markets</div><div class="desc">Futarchy: two prediction markets, pass vs. fail, resolved by comparing price over time. No voting at all.</div><div class="tag">market-based</div></div>
-        <div class="model-row"><div class="name">Opportunity Market</div><div class="desc">Confidential prediction surveys — place fully encrypted bets; only the winning outcome and its total backing are ever revealed.</div><div class="tag">confidential</div></div>
+        <div class="model-row"><div class="name">Opportunity Market</div><div class="desc">Confidential prediction surveys: place fully encrypted bets; only the winning outcome and its total backing are ever revealed.</div><div class="tag">confidential</div></div>
       </div>
     </div>
   </section>
@@ -267,7 +269,7 @@
       <div class="usecase-list">
         <div class="usecase"><h3>DAO Associations</h3><div class="offer">Online communities that need a shared treasury and real coordination. <b>Messenger-native interaction, governance tools, association registration (Wyoming DUNA or Marshall Islands nonprofit DAO LLC), accounting, and banking tools.</b></div></div>
         <div class="usecase"><h3>Private Escrow Groups</h3><div class="offer">NFT/token OTC trading and gig-economy deals. <b>Secure fund escrow, permissioned groups that cut impersonation risk, and withdrawals straight to a bank account.</b></div></div>
-        <div class="usecase"><h3>Private Opportunity Surveys</h3><div class="offer">Businesses and investment groups consulting scouts who can't risk a leak. <b>Confidential survey tools, process and results analytics, and researcher reward tools</b> — powered by Protean's confidential Opportunity Market.</div></div>
+        <div class="usecase"><h3>Private Opportunity Surveys</h3><div class="offer">Businesses and investment groups consulting scouts who can't risk a leak. <b>Confidential survey tools, process and results analytics, and researcher reward tools</b>, powered by Protean's confidential Opportunity Market.</div></div>
         <div class="usecase"><h3>Optimistic Treasury Management</h3><div class="offer">Foundations and nonprofits making regular operational payments. <b>Built-in oversight and accounting, plus association registration and banking tools.</b></div></div>
         <div class="usecase"><h3>Private Decision Markets</h3><div class="offer">DAO corporations and funds that want market-driven decisions. <b>Sowellian and futarchy tooling, outcome verification, accounting, and for-profit Marshall Islands DAO LLC registration.</b></div></div>
       </div>
@@ -309,20 +311,20 @@
         <div class="chain-cell">
           <div class="status live">live · testnet</div>
           <h3>Monad</h3>
-          <div class="role">Governance — all ten models</div>
-          <div class="addr">10 verified factory contracts — <a href="#" onclick="showView('docs'); setTimeout(() => document.getElementById('doc-chains').scrollIntoView(), 50); return false;" style="text-decoration:underline">see addresses</a></div>
+          <div class="role">Governance: all ten models</div>
+          <div class="addr">10 verified factory contracts. <a href="#" onclick="showView('docs'); setTimeout(() => document.getElementById('doc-chains').scrollIntoView(), 50); return false;" style="text-decoration:underline">see addresses</a></div>
         </div>
         <div class="chain-cell">
           <div class="status pending">deployed</div>
           <h3>Base</h3>
           <div class="role">Governance</div>
-          <div class="addr pending">Factory addresses — added on deployment</div>
+          <div class="addr pending">Factory addresses, added on deployment</div>
         </div>
         <div class="chain-cell">
           <div class="status pending">deployed</div>
           <h3>HyperEVM</h3>
           <div class="role">Governance</div>
-          <div class="addr pending">Factory addresses — added on deployment</div>
+          <div class="addr pending">Factory addresses, added on deployment</div>
         </div>
         <div class="chain-cell">
           <div class="status live">live · testnet</div>
@@ -369,57 +371,58 @@
     <div class="docs-content">
 
       <h2 id="doc-overview">Overview</h2>
-      <p class="doc-lede">Protean is the governance layer for social messengers — programmable, on-chain governance mechanisms brought directly into Telegram, Discord, and Slack.</p>
-      <p>Instead of forcing every community into the same governance model, Protean provides modular governance primitives that deploy directly inside the chat a community already uses. A DAO's treasury and its voting logic are deliberately separate — a group can change how it decides things without ever migrating funds.</p>
+      <p class="doc-lede">Protean is the governance layer for social messengers: programmable, on-chain governance mechanisms brought directly into Telegram, Discord, and Slack.</p>
+      <p>Instead of forcing every community into the same governance model, Protean provides modular governance primitives that deploy directly inside the chat a community already uses. A DAO's treasury and its voting logic are deliberately separate, so a group can change how it decides things without ever migrating funds.</p>
+      <p>A passed proposal can already execute real onchain actions atomically through Protean's verified action library, reaching Treasury, tokens, and connected wrappers in one approved step. The planned offchain counterpart is a compliant banking tool that executes a payment the moment a DAO approves it, with no separate manual step required. Optional legal wrappers, such as a Wyoming DUNA or a Marshall Islands DAO LLC, are also available for communities that need real-world legal standing for their onchain treasury.</p>
 
       <h2 id="doc-architecture">Architecture</h2>
       <p class="doc-lede">Three parts: the governance contracts, the bot interfaces, and this site.</p>
       <div class="arch-diagram">
-        <div class="arch-row"><span class="label">contracts</span><span class="note">Solidity — one factory per governance model, deployed with Foundry</span></div>
-        <div class="arch-row"><span class="label">bot</span><span class="note">Node.js — handles all interaction and transaction execution on Telegram, Discord, and Slack</span></div>
-        <div class="arch-row"><span class="label">connect</span><span class="note">This site — onboarding for people integrating the bot</span></div>
+        <div class="arch-row"><span class="label">contracts</span><span class="note">Solidity: one factory per governance model, deployed with Foundry</span></div>
+        <div class="arch-row"><span class="label">bot</span><span class="note">Node.js: handles all interaction and transaction execution on Telegram, Discord, and Slack</span></div>
+        <div class="arch-row"><span class="label">connect</span><span class="note">This site: onboarding for people integrating the bot</span></div>
       </div>
-      <p>Every DAO gets its own, fully separate contract deployment — a real Governance contract, a real Treasury, a real governance token. Nothing is a shared proxy; each community's DAO is independent from every other.</p>
-      <div class="callout"><p>Two optional wrapper contracts sit alongside a DAO: an NFT marketplace wrapper for on-chain trading, and a Guard Wrapper — a security-council layer that can inspect and confirm sensitive treasury or token actions before they execute.</p></div>
+      <p>Every DAO gets its own, fully separate contract deployment: a real Governance contract, a real Treasury, a real governance token. Nothing is a shared proxy; each community's DAO is independent from every other.</p>
+      <div class="callout"><p>Two optional wrapper contracts sit alongside a DAO: an NFT marketplace wrapper for on-chain trading, and a Guard Wrapper, a security-council layer that can inspect and confirm sensitive treasury or token actions before they execute.</p></div>
 
       <h2 id="doc-models">Governance models</h2>
       <p class="doc-lede">All ten share the same propose → vote → queue → execute shape.</p>
       <h3>Token-weighted</h3>
       <p>The baseline model. Voting power is read from a snapshot at proposal creation, weighted by balance.</p>
       <h3>Quadratic</h3>
-      <p>Same shape as token-weighted, but voting power scales with the square root of tokens held — reducing the influence of the largest holders relative to the wider group.</p>
+      <p>Same shape as token-weighted, but voting power scales with the square root of tokens held, reducing the influence of the largest holders relative to the wider group.</p>
       <h3>Liquid</h3>
       <p>Token-weighted voting with delegation. A holder can hand their voting power to someone else, and reclaim it at any time.</p>
       <h3>Optimistic</h3>
-      <p>A proposal passes automatically once its challenge window closes, unless someone challenges it — in which case it goes to a real vote. Built for routine actions that shouldn't need a full vote cycle every time.</p>
+      <p>A proposal passes automatically once its challenge window closes, unless someone challenges it, in which case it goes to a real vote. Built for routine actions that shouldn't need a full vote cycle every time.</p>
       <h3>Conviction</h3>
-      <p>No discrete "for/against" vote. A holder commits their current stake to a proposal, and their conviction accumulates the longer it stays committed — rewarding sustained, patient support over a single burst of votes.</p>
+      <p>No discrete "for/against" vote. A holder commits their current stake to a proposal, and their conviction accumulates the longer it stays committed, rewarding sustained, patient support over a single burst of votes.</p>
       <h3>Board</h3>
-      <p>A signer multisig. No governance token at all — a fixed set of signers confirms transactions directly, with a configurable approval threshold.</p>
+      <p>A signer multisig. No governance token at all: a fixed set of signers confirms transactions directly, with a configurable approval threshold.</p>
       <h3>Sortition</h3>
-      <p>A council selected at random from eligible members via an external randomness source, serving fixed terms — governance by lottery rather than election or stake.</p>
+      <p>A council selected at random from eligible members via an external randomness source, serving fixed terms, governance by lottery rather than election or stake.</p>
       <h3>Delegate</h3>
       <p>A council elected by ordinary token-holder vote, serving fixed terms before a new election reopens.</p>
       <h3>Sowellian</h3>
-      <p>A two-phase model: proposals first go through an approval phase, and disputed outcomes move to an adjudication phase — with optional resolution against a live Chainlink or Switchboard price feed.</p>
+      <p>A two-phase model: proposals first go through an approval phase, and disputed outcomes move to an adjudication phase, with optional resolution against a live Chainlink or Switchboard price feed.</p>
       <h3>Decision Markets</h3>
-      <p>Futarchy. Two prediction markets are opened for a proposal — one betting it will pass, one betting it will fail — and the outcome is decided by comparing their time-weighted average price. No voting step exists in this model at all.</p>
+      <p>Futarchy. Two prediction markets are opened for a proposal, one betting it will pass and one betting it will fail, and the outcome is decided by comparing their time-weighted average price. No voting step exists in this model at all.</p>
 
       <h2 id="doc-opportunity">Opportunity Market</h2>
-      <p class="doc-lede">A confidential prediction market — a distinct primitive, not a twin of the ten governance models above.</p>
-      <p>Opportunity Market has no proposals and no votes. Its lifecycle is: list an opportunity, place fully encrypted bets on which one will succeed, resolve the outcome, then reveal only the winning opportunity and its aggregate backing total — individual bets and positions are never revealed, even after resolution. Built on Zama's confidential compute stack, currently deployed on Ethereum Sepolia, since that's where Zama's coprocessor network exists today. It moves to other chains as Zama's network expands to them.</p>
+      <p class="doc-lede">A confidential prediction market, a distinct primitive, not a twin of the ten governance models above.</p>
+      <p>Opportunity Market has no proposals and no votes. Its lifecycle is: list an opportunity, place fully encrypted bets on which one will succeed, resolve the outcome, then reveal only the winning opportunity and its aggregate backing total. Individual bets and positions are never revealed, even after resolution. Built on Zama's confidential compute stack, currently deployed on Ethereum Sepolia, since that's where Zama's coprocessor network exists today. It moves to other chains as Zama's network expands to them.</p>
 
       <h2 id="doc-guard">Guard Wrapper</h2>
       <p class="doc-lede">An optional security layer a DAO can adopt without changing its governance model at all.</p>
-      <p>A Guard Wrapper sits between governance and a DAO's treasury or token contract. Governance can propose an instruction to it, but a small set of signers must confirm before it actually executes — giving a DAO a human circuit-breaker against a malicious or mistaken proposal, without giving those signers any power to act on their own. Signers can only confirm or reject what governance already sent; they can never initiate a transaction themselves.</p>
+      <p>A Guard Wrapper sits between governance and a DAO's treasury or token contract. Governance can propose an instruction to it, but a small set of signers must confirm before it actually executes, giving a DAO a human circuit-breaker against a malicious or mistaken proposal, without giving those signers any power to act on their own. Signers can only confirm or reject what governance already sent; they can never initiate a transaction themselves.</p>
 
       <h2 id="doc-commands">Commands</h2>
-      <p class="doc-lede">The full command set. Which ones apply depends on your DAO's governance model — a Board DAO doesn't have <code>/stake</code>, a Delegate DAO doesn't have <code>/support</code>, and so on.</p>
+      <p class="doc-lede">The full command set. Which ones apply depends on your DAO's governance model: a Board DAO doesn't have <code>/stake</code>, a Delegate DAO doesn't have <code>/support</code>, and so on.</p>
 
       <h4>Core lifecycle</h4>
       <table class="cmd-table">
         <tr><th>Command</th><th>What it does</th></tr>
-        <tr><td><code>/createdao</code></td><td>Deploys a new DAO — treasury, token, and your chosen governance model — directly in this chat.</td></tr>
+        <tr><td><code>/createdao</code></td><td>Deploys a new DAO, with a treasury, token, and your chosen governance model, directly in this chat.</td></tr>
         <tr><td><code>/propose</code></td><td>Creates a new proposal for the linked DAO to vote on.</td></tr>
         <tr><td><code>/vote</code></td><td>Casts a vote on an open proposal (token-weighted, quadratic, liquid, optimistic, delegate).</td></tr>
         <tr><td><code>/queue</code></td><td>Moves a passed proposal into its execution timelock.</td></tr>
@@ -438,7 +441,7 @@
         <tr><th>Command</th><th>Model</th><th>What it does</th></tr>
         <tr><td><code>/support</code></td><td>Conviction</td><td>Commits your current stake to a proposal, accumulating conviction over time.</td></tr>
         <tr><td><code>/confirmtransaction</code></td><td>Board</td><td>A signer confirms a proposed transaction.</td></tr>
-        <tr><td><code>/addsigner</code> / <code>/removesigner</code></td><td>Board</td><td>Adds or removes a signer — only via a passed proposal.</td></tr>
+        <tr><td><code>/addsigner</code> / <code>/removesigner</code></td><td>Board</td><td>Adds or removes a signer, only via a passed proposal.</td></tr>
         <tr><td><code>/castcouncilvote</code></td><td>Sortition</td><td>A randomly-selected council member votes on a proposal.</td></tr>
         <tr><td><code>/voteinelection</code></td><td>Delegate</td><td>Votes for candidates in a council election.</td></tr>
         <tr><td><code>/declarecandidacy</code></td><td>Delegate</td><td>Declares your candidacy for an open council election.</td></tr>
@@ -462,7 +465,7 @@
       <table class="cmd-table">
         <tr><th>Command</th><th>What it does</th></tr>
         <tr><td><code>/deploynftwrapper</code></td><td>Deploys an NFT marketplace wrapper for this DAO.</td></tr>
-        <tr><td><code>/deployguardwrapper</code></td><td>Deploys a Guard Wrapper — a signer-confirmed security layer — for this DAO.</td></tr>
+        <tr><td><code>/deployguardwrapper</code></td><td>Deploys a Guard Wrapper (a signer-confirmed security layer) for this DAO.</td></tr>
         <tr><td><code>/registerguardwrapper</code></td><td>Links an already-deployed Guard Wrapper to this chat.</td></tr>
         <tr><td><code>/handovertowrapper</code></td><td>Computes the proposals that hand Treasury and token control to a Guard Wrapper.</td></tr>
         <tr><td><code>/guardwrapper</code></td><td>Shows a wrapper's current signers, threshold, and tenure status.</td></tr>
@@ -509,9 +512,9 @@
 
       <h3>Other chains</h3>
       <div class="arch-diagram">
-        <div class="arch-row"><span class="label">Base</span><span class="note"><span class="placeholder-note">factory addresses — pending</span></span></div>
-        <div class="arch-row"><span class="label">HyperEVM</span><span class="note"><span class="placeholder-note">factory addresses — pending</span></span></div>
-        <div class="arch-row"><span class="label">Ethereum Sepolia</span><span class="note">Opportunity Market — <a href="https://sepolia.etherscan.io/address/0xe61C9d371D3BEA6ceA5359E745593D8ebB39BEC5" target="_blank" rel="noreferrer" style="color:var(--accent)"><code>0xe61C...BEC5</code></a></span></div>
+        <div class="arch-row"><span class="label">Base</span><span class="note"><span class="placeholder-note">factory addresses, pending</span></span></div>
+        <div class="arch-row"><span class="label">HyperEVM</span><span class="note"><span class="placeholder-note">factory addresses, pending</span></span></div>
+        <div class="arch-row"><span class="label">Ethereum Sepolia</span><span class="note">Opportunity Market: <a href="https://sepolia.etherscan.io/address/0xe61C9d371D3BEA6ceA5359E745593D8ebB39BEC5" target="_blank" rel="noreferrer" style="color:var(--accent)"><code>0xe61C...BEC5</code></a></span></div>
       </div>
     </div>
   </div>
