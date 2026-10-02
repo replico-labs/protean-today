@@ -152,6 +152,17 @@
   .arch-row .note { font-size: 13px; color: var(--text-dim); text-align: right; }
 
   .callout { border-left: 2px solid var(--accent); padding: 4px 0 4px 18px; margin: 20px 0 28px; max-width: 600px; }
+
+  .lifecycle-block { margin-bottom: 40px; }
+  .lifecycle-block h3 { margin-top: 0; }
+  .lifecycle-chain { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 12px 0 14px; }
+  .lc-pill { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--panel); border: 1px solid var(--border); color: var(--text); padding: 5px 11px; border-radius: 20px; white-space: nowrap; }
+  .lc-pill.branch { border-style: dashed; color: var(--text-dim); }
+  .lc-arrow { color: var(--accent); font-size: 13px; }
+  .lc-cmd-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; margin: 14px 0 6px; }
+  .lc-pill.cmd { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .lifecycle-block .distinct-note { font-size: 14px; color: var(--text-dim); max-width: 660px; margin: 0; }
+  .lifecycle-block .distinct-note b { color: var(--text); font-weight: 600; }
   .callout p { margin: 0; color: var(--text-dim); font-size: 14.5px; }
 
   .placeholder-note { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); border: 1px dashed var(--border); padding: 3px 8px; border-radius: 20px; }
@@ -363,6 +374,7 @@
       <a href="#doc-architecture">Architecture</a>
       <a href="#doc-models">Governance models</a>
       <a href="#doc-opportunity">Opportunity Market</a>
+      <a href="#doc-lifecycle">Module lifecycles</a>
       <a href="#doc-guard">Guard Wrapper</a>
       <a href="#doc-commands">Commands</a>
       <a href="#doc-chains">Chains &amp; contracts</a>
@@ -411,6 +423,201 @@
       <h2 id="doc-opportunity">Opportunity Market</h2>
       <p class="doc-lede">A confidential prediction market, a distinct primitive, not a twin of the ten governance models above.</p>
       <p>Opportunity Market has no proposals and no votes. Its lifecycle is: list an opportunity, place fully encrypted bets on which one will succeed, resolve the outcome, then reveal only the winning opportunity and its aggregate backing total. Individual bets and positions are never revealed, even after resolution. Built on Zama's confidential compute stack, currently deployed on Ethereum Sepolia, since that's where Zama's coprocessor network exists today. It moves to other chains as Zama's network expands to them.</p>
+
+      <h2 id="doc-lifecycle">Module lifecycles</h2>
+      <p class="doc-lede">The actual states and commands each of the eleven modules moves through, from proposal to finished outcome.</p>
+
+      <div class="lifecycle-block">
+        <h3>Token-weighted, Quadratic, Liquid</h3>
+        <div class="lifecycle-chain">
+          <span class="lc-pill">Pending</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Active</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Succeeded / Defeated</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Queued</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Executed</span>
+        </div>
+        <div class="lc-cmd-label">Commands</div>
+        <div class="lifecycle-chain">
+          <span class="lc-pill cmd">/propose</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/vote</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/queue</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/execute</span>
+        </div>
+        <p class="distinct-note">All three share this same eight-state shape (also including <b>Cancelled</b> and <b>Expired</b>). The only real difference between them is how voting power is counted: <b>Token-weighted</b> uses a raw balance snapshot, <b>Quadratic</b> uses the square root of that balance, and <b>Liquid</b> adds <code>delegate()</code> / <code>undelegate()</code>, letting a holder hand their vote to someone else and have it resolve down a full delegation chain.</p>
+      </div>
+
+      <div class="lifecycle-block">
+        <h3>Optimistic</h3>
+        <div class="lifecycle-chain">
+          <span class="lc-pill">ChallengeWindow</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill branch">if challenged</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Active</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Succeeded / Defeated</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Queued</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Executed</span>
+        </div>
+        <div class="lc-cmd-label">Commands</div>
+        <div class="lifecycle-chain">
+          <span class="lc-pill cmd">/propose</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd branch">/challenge (optional)</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/vote</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/queue</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/execute</span>
+        </div>
+        <p class="distinct-note">The one model that starts in a different state than every other: <b>ChallengeWindow</b>, not Pending. A proposal passes automatically once that window closes unless someone calls <code>challenge()</code>, which is the only point a real token-weighted vote (<b>Active</b>) ever happens here.</p>
+      </div>
+
+      <div class="lifecycle-block">
+        <h3>Conviction</h3>
+        <div class="lifecycle-chain">
+          <span class="lc-pill">Pending</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">support() accumulates</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Succeeded</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Queued</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Executed</span>
+        </div>
+        <div class="lc-cmd-label">Commands</div>
+        <div class="lifecycle-chain">
+          <span class="lc-pill cmd">/propose</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/support</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd branch">/withdrawsupport (optional)</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/queue</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/execute</span>
+        </div>
+        <p class="distinct-note">No discrete vote at all, <code>vote()</code> isn't used here. A holder commits their current stake with <code>support()</code>, and conviction accumulates the longer that stake stays committed. <code>withdrawSupport()</code> pulls it back at any time.</p>
+      </div>
+
+      <div class="lifecycle-block">
+        <h3>Board</h3>
+        <div class="lifecycle-chain">
+          <span class="lc-pill">Proposed</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">confirm() by signers</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">auto-queued at threshold</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Executed</span>
+        </div>
+        <div class="lc-cmd-label">Commands</div>
+        <div class="lifecycle-chain">
+          <span class="lc-pill cmd">/propose</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/confirm</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd branch">/revoke (optional)</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/execute</span>
+        </div>
+        <p class="distinct-note">The only model with no token and no separate queue step at all, confirming a proposal automatically queues it the moment the required threshold is reached. It's also the only model that can move <b>backward</b>: revoking a confirmation below threshold un-queues a proposal that had already qualified.</p>
+      </div>
+
+      <div class="lifecycle-block">
+        <h3>Sortition</h3>
+        <div class="lifecycle-chain">
+          <span class="lc-pill">registerEligible()</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">startSortition()</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">finalizeSortition()</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Council seated</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">propose &#8594; vote &#8594; queue &#8594; execute</span>
+        </div>
+        <div class="lc-cmd-label">Commands</div>
+        <div class="lifecycle-chain">
+          <span class="lc-pill cmd">/registereligible</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/startsortition</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/finalizesortition</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/propose</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/vote</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/queue</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/execute</span>
+        </div>
+        <p class="distinct-note">Council selection has no election at all. Eligible token holders opt into a pool, and the council is drawn from that pool by a verifiable random shuffle against an external randomness source. Once seated, anyone meeting the eligibility threshold (not just council members) can propose; only the council actually votes, by headcount, not token weight.</p>
+      </div>
+
+      <div class="lifecycle-block">
+        <h3>Delegate</h3>
+        <div class="lifecycle-chain">
+          <span class="lc-pill">startElection()</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">declareCandidacy()</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">voteInElection()</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Council seated</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">council proposes &#38; votes</span>
+        </div>
+        <div class="lc-cmd-label">Commands</div>
+        <div class="lifecycle-chain">
+          <span class="lc-pill cmd">/startelection</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/declarecandidacy</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/voteinelection</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/finalizeelection</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/propose</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/vote</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/queue</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/execute</span>
+        </div>
+        <p class="distinct-note">Three separate mechanisms on one contract: an <b>election</b> open to every token holder (token-weighted), <b>council proposals</b> restricted to sitting council members only (headcount-weighted), and a separate <b>recall</b> vote, also open to every holder, that can remove a council member early before their term ends.</p>
+      </div>
+
+      <div class="lifecycle-block">
+        <h3>Sowellian</h3>
+        <div class="lifecycle-chain">
+          <span class="lc-pill">ApprovalVoting</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">PositionsOpen</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Executed</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">ResolutionPending</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill branch">if challenged</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Adjudicating</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Finalized</span>
+        </div>
+        <div class="lc-cmd-label">Commands</div>
+        <div class="lifecycle-chain">
+          <span class="lc-pill cmd">/proposecriteria</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/castapprovalvote</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/finalizeapproval</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/takeposition</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/execute</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd branch">/resolveviaoracle or /proposeresolution</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd branch">/challengeresolution &#8594; /castadjudicationvote &#8594; /finalizeadjudication, or /finalizeunchallenged</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/claimposition</span>
+        </div>
+        <p class="distinct-note">A proposal first passes a token-weighted <b>approval</b> vote, then opens for people to <code>takePosition()</code> on its real-world outcome. Resolution can come automatically from a live oracle, or from a human proposing an outcome that others can challenge into a second, <b>adjudication</b> vote. <code>claimPosition()</code> only pays out once the outcome is final.</p>
+      </div>
+
+      <div class="lifecycle-block">
+        <h3>Decision Markets (Futarchy)</h3>
+        <div class="lifecycle-chain">
+          <span class="lc-pill">proposeWithSeed()</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">two live markets open</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">trade()</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">finalizeProposal()</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">Executed</span>
+        </div>
+        <div class="lc-cmd-label">Commands</div>
+        <div class="lifecycle-chain">
+          <span class="lc-pill cmd">/proposemarket</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/trade</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/finalizeproposal</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/execute</span>
+        </div>
+        <p class="distinct-note">No vote of any kind exists on this contract. Proposing seeds two live trading markets, pass and fail, and people trade whichever side they believe in. <code>finalizeProposal()</code> simply compares the two markets' time-weighted average price. Pass must exceed fail's by a configured margin, that comparison alone is the entire verdict.</p>
+      </div>
+
+      <div class="lifecycle-block">
+        <h3>Opportunity Market</h3>
+        <div class="lifecycle-chain">
+          <span class="lc-pill">listOpportunity()</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">deposit()</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">back()</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">resolve()</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">reveal winning total</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">computeReward()</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill">withdraw</span>
+        </div>
+        <div class="lc-cmd-label">Commands</div>
+        <div class="lifecycle-chain">
+          <span class="lc-pill cmd">/createmarket</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/listopportunity</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/deposit</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/back</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/resolve</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/revealwinningtotal</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/computereward</span><span class="lc-arrow">&#8594;</span>
+          <span class="lc-pill cmd">/withdraw</span>
+        </div>
+        <p class="distinct-note">No proposals, no votes, not a governance model at all. A deployer lists one or more opportunities; bettors fund a confidential balance and place fully encrypted bets with <code>back()</code>. Once the deployer calls <code>resolve()</code>, only the winning opportunity's aggregate total is ever revealed, individual bets and positions never are, even after everyone has been paid out.</p>
+      </div>
 
       <h2 id="doc-guard">Guard Wrapper</h2>
       <p class="doc-lede">An optional security layer a DAO can adopt without changing its governance model at all.</p>
