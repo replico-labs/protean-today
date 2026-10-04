@@ -323,25 +323,25 @@
           <div class="status live">live · testnet</div>
           <h3>Monad</h3>
           <div class="role">Governance: all ten models</div>
-          <div class="addr">10 verified factory contracts. <a href="#" onclick="showView('docs'); setTimeout(() => document.getElementById('doc-chains').scrollIntoView(), 50); return false;" style="text-decoration:underline">see addresses</a></div>
+          <div class="addr">10 verified factory contracts. <a href="#" onclick="showView('docs'); setTimeout(() => document.getElementById('doc-chain-monad').scrollIntoView(), 50); return false;" style="text-decoration:underline">see addresses</a></div>
         </div>
         <div class="chain-cell">
-          <div class="status pending">deployed</div>
+          <div class="status live">live · testnet</div>
           <h3>Base</h3>
-          <div class="role">Governance</div>
-          <div class="addr pending">Factory addresses, added on deployment</div>
+          <div class="role">Governance: all ten models</div>
+          <div class="addr">10 verified factory contracts. <a href="#" onclick="showView('docs'); setTimeout(() => document.getElementById('doc-chain-base').scrollIntoView(), 50); return false;" style="text-decoration:underline">see addresses</a></div>
         </div>
         <div class="chain-cell">
-          <div class="status pending">deployed</div>
+          <div class="status live">live · testnet</div>
           <h3>HyperEVM</h3>
-          <div class="role">Governance</div>
-          <div class="addr pending">Factory addresses, added on deployment</div>
+          <div class="role">Governance: all ten models</div>
+          <div class="addr">10 verified factory contracts. <a href="#" onclick="showView('docs'); setTimeout(() => document.getElementById('doc-chain-hyperevm').scrollIntoView(), 50); return false;" style="text-decoration:underline">see addresses</a></div>
         </div>
         <div class="chain-cell">
           <div class="status live">live · testnet</div>
           <h3>Ethereum (Sepolia)</h3>
           <div class="role">Opportunity Market</div>
-          <div class="addr"><a href="https://sepolia.etherscan.io/address/0xe61C9d371D3BEA6ceA5359E745593D8ebB39BEC5" target="_blank" rel="noreferrer" style="color:var(--accent)">Verified factory contract →</a></div>
+          <div class="addr"><a href="https://sepolia.etherscan.io/address/0xE9fF23EA5FE342568B5Db083E937f397C75c4625" target="_blank" rel="noreferrer" style="color:var(--accent)">Verified factory contract →</a></div>
         </div>
       </div>
     </div>
@@ -701,28 +701,66 @@
       <h2 id="doc-chains">Chains &amp; contracts</h2>
       <p class="doc-lede">Governance runs on ultra-cheap EVMs; Opportunity Market runs wherever Zama's coprocessor network exists today.</p>
 
-      <h3>Monad testnet</h3>
-      <p>All ten governance factories are live and verifiable on <a href="https://testnet.monadvision.com" target="_blank" rel="noreferrer" style="color:var(--accent)">MonadVision</a>, Monad's official block explorer.</p>
+      <h3 id="doc-chain-monad">Monad testnet (chain 10143)</h3>
+      <p>All ten governance factories, plus their Pyth adapters, are live and verifiable on <a href="https://testnet.monadvision.com" target="_blank" rel="noreferrer" style="color:var(--accent)">MonadVision</a>, Monad's official block explorer.</p>
       <table class="cmd-table">
-        <tr><th>Model</th><th>Factory address</th></tr>
-        <tr><td>Token-weighted</td><td><a href="https://testnet.monadvision.com/address/0x8bB68e835032e58c410125e5219B8Ae7FcAcc056" target="_blank" rel="noreferrer"><code>0x8bB6...c056</code></a></td></tr>
-        <tr><td>Quadratic</td><td><a href="https://testnet.monadvision.com/address/0x9d109ba81002B85a48252115Ed5487F6b60C78F9" target="_blank" rel="noreferrer"><code>0x9d10...78F9</code></a></td></tr>
-        <tr><td>Liquid</td><td><a href="https://testnet.monadvision.com/address/0x55C89331FA2F6a71E375c6C2aAf9BbE5b9b17fFe" target="_blank" rel="noreferrer"><code>0x55C8...7fFe</code></a></td></tr>
-        <tr><td>Optimistic</td><td><a href="https://testnet.monadvision.com/address/0x8F5a20c910aEbF287790e04799Ce0DB677705674" target="_blank" rel="noreferrer"><code>0x8F5a...5674</code></a></td></tr>
-        <tr><td>Delegate</td><td><a href="https://testnet.monadvision.com/address/0x3fFb77D2A380C52e04b8d22E73EDc7d47e8f975c" target="_blank" rel="noreferrer"><code>0x3fFb...f975c</code></a></td></tr>
-        <tr><td>Board</td><td><a href="https://testnet.monadvision.com/address/0x2367d102B71ab6c3c3b69eD7580c3Be3ACb5BE9A" target="_blank" rel="noreferrer"><code>0x2367...BE9A</code></a></td></tr>
-        <tr><td>Sortition</td><td><a href="https://testnet.monadvision.com/address/0xBeB038379CD821811ab097308fABF89BcA4bBA7B" target="_blank" rel="noreferrer"><code>0xBeB0...BA7B</code></a></td></tr>
-        <tr><td>Conviction</td><td><a href="https://testnet.monadvision.com/address/0x14439Fa27258c8fd65F5805eA5617774891f173c" target="_blank" rel="noreferrer"><code>0x1443...f173c</code></a></td></tr>
-        <tr><td>Sowellian</td><td><a href="https://testnet.monadvision.com/address/0x075289669Ab8601dd8b15D95551644D511949056" target="_blank" rel="noreferrer"><code>0x0752...9056</code></a></td></tr>
-        <tr><td>Decision Markets</td><td><a href="https://testnet.monadvision.com/address/0x99DeC80E792f9C1fA92F46fe08c6763CBCCfE388" target="_blank" rel="noreferrer"><code>0x99De...fE388</code></a></td></tr>
+        <tr><th>Contract</th><th>Address</th></tr>
+        <tr><td>Token-weighted</td><td><a href="https://testnet.monadvision.com/address/0x8bB68e835032e58c410125e5219B8Ae7FcAcc056" target="_blank" rel="noreferrer" title="0x8bB68e835032e58c410125e5219B8Ae7FcAcc056"><code>0x8bB6...c056</code></a></td></tr>
+        <tr><td>Quadratic</td><td><a href="https://testnet.monadvision.com/address/0x9d109ba81002B85a48252115Ed5487F6b60C78F9" target="_blank" rel="noreferrer" title="0x9d109ba81002B85a48252115Ed5487F6b60C78F9"><code>0x9d10...78F9</code></a></td></tr>
+        <tr><td>Liquid</td><td><a href="https://testnet.monadvision.com/address/0x55C89331FA2F6a71E375c6C2aAf9BbE5b9b17fFe" target="_blank" rel="noreferrer" title="0x55C89331FA2F6a71E375c6C2aAf9BbE5b9b17fFe"><code>0x55C8...7fFe</code></a></td></tr>
+        <tr><td>Optimistic</td><td><a href="https://testnet.monadvision.com/address/0x8F5a20c910aEbF287790e04799Ce0DB677705674" target="_blank" rel="noreferrer" title="0x8F5a20c910aEbF287790e04799Ce0DB677705674"><code>0x8F5a...5674</code></a></td></tr>
+        <tr><td>Delegate</td><td><a href="https://testnet.monadvision.com/address/0x3fFb77D2A380C52e04b8d22E73EDc7d47e8f975c" target="_blank" rel="noreferrer" title="0x3fFb77D2A380C52e04b8d22E73EDc7d47e8f975c"><code>0x3fFb...975c</code></a></td></tr>
+        <tr><td>Board</td><td><a href="https://testnet.monadvision.com/address/0x2367d102B71ab6c3c3b69eD7580c3Be3ACb5BE9A" target="_blank" rel="noreferrer" title="0x2367d102B71ab6c3c3b69eD7580c3Be3ACb5BE9A"><code>0x2367...BE9A</code></a></td></tr>
+        <tr><td>Sortition</td><td><a href="https://testnet.monadvision.com/address/0x251b2371e2E98b5db9A2ceF3B687dF1A93BD24E6" target="_blank" rel="noreferrer" title="0x251b2371e2E98b5db9A2ceF3B687dF1A93BD24E6"><code>0x251b...24E6</code></a></td></tr>
+        <tr><td>Conviction</td><td><a href="https://testnet.monadvision.com/address/0x14439Fa27258c8fd65F5805eA5617774891f173c" target="_blank" rel="noreferrer" title="0x14439Fa27258c8fd65F5805eA5617774891f173c"><code>0x1443...173c</code></a></td></tr>
+        <tr><td>Sowellian</td><td><a href="https://testnet.monadvision.com/address/0x075289669Ab8601dd8b15D95551644D511949056" target="_blank" rel="noreferrer" title="0x075289669Ab8601dd8b15D95551644D511949056"><code>0x0752...9056</code></a></td></tr>
+        <tr><td>Decision Markets</td><td><a href="https://testnet.monadvision.com/address/0x99DeC80E792f9C1fA92F46fe08c6763CBCCfE388" target="_blank" rel="noreferrer" title="0x99DeC80E792f9C1fA92F46fe08c6763CBCCfE388"><code>0x99De...E388</code></a></td></tr>
+        <tr><td>Pyth Entropy adapter (Sortition)</td><td><a href="https://testnet.monadvision.com/address/0x422cbB19F504D57cB909AC149e97f48Ba8c1b92D" target="_blank" rel="noreferrer" title="0x422cbB19F504D57cB909AC149e97f48Ba8c1b92D"><code>0x422c...b92D</code></a></td></tr>
+        <tr><td>Pyth price adapter (Sowellian)</td><td><a href="https://testnet.monadvision.com/address/0x6C582533290855Af7F95d4484A6bb2e8C317949e" target="_blank" rel="noreferrer" title="0x6C582533290855Af7F95d4484A6bb2e8C317949e"><code>0x6C58...949e</code></a></td></tr>
       </table>
 
-      <h3>Other chains</h3>
-      <div class="arch-diagram">
-        <div class="arch-row"><span class="label">Base</span><span class="note"><span class="placeholder-note">factory addresses, pending</span></span></div>
-        <div class="arch-row"><span class="label">HyperEVM</span><span class="note"><span class="placeholder-note">factory addresses, pending</span></span></div>
-        <div class="arch-row"><span class="label">Ethereum Sepolia</span><span class="note">Opportunity Market: <a href="https://sepolia.etherscan.io/address/0xe61C9d371D3BEA6ceA5359E745593D8ebB39BEC5" target="_blank" rel="noreferrer" style="color:var(--accent)"><code>0xe61C...BEC5</code></a></span></div>
-      </div>
+      <h3 id="doc-chain-base">Base Sepolia (chain 84532)</h3>
+      <p>All ten governance factories, plus their Pyth adapters, are live and verifiable on <a href="https://sepolia.basescan.org" target="_blank" rel="noreferrer" style="color:var(--accent)">Basescan</a>, the block explorer for Base Sepolia.</p>
+      <table class="cmd-table">
+        <tr><th>Contract</th><th>Address</th></tr>
+        <tr><td>Token-weighted</td><td><a href="https://sepolia.basescan.org/address/0x72648d7954877Dadd9B38D71EE3C70e245D29B3a" target="_blank" rel="noreferrer" title="0x72648d7954877Dadd9B38D71EE3C70e245D29B3a"><code>0x7264...9B3a</code></a></td></tr>
+        <tr><td>Quadratic</td><td><a href="https://sepolia.basescan.org/address/0xd85923722591C005a23840Cd95B6888ABD11a345" target="_blank" rel="noreferrer" title="0xd85923722591C005a23840Cd95B6888ABD11a345"><code>0xd859...a345</code></a></td></tr>
+        <tr><td>Liquid</td><td><a href="https://sepolia.basescan.org/address/0x10F551fF56455366AE7E9D3c3BBc96c9f058E821" target="_blank" rel="noreferrer" title="0x10F551fF56455366AE7E9D3c3BBc96c9f058E821"><code>0x10F5...E821</code></a></td></tr>
+        <tr><td>Optimistic</td><td><a href="https://sepolia.basescan.org/address/0x2367d102B71ab6c3c3b69eD7580c3Be3ACb5BE9A" target="_blank" rel="noreferrer" title="0x2367d102B71ab6c3c3b69eD7580c3Be3ACb5BE9A"><code>0x2367...BE9A</code></a></td></tr>
+        <tr><td>Delegate</td><td><a href="https://sepolia.basescan.org/address/0x5107BEfC0fEbE1E16bb8F408768bc5FF9F872658" target="_blank" rel="noreferrer" title="0x5107BEfC0fEbE1E16bb8F408768bc5FF9F872658"><code>0x5107...2658</code></a></td></tr>
+        <tr><td>Board</td><td><a href="https://sepolia.basescan.org/address/0x0be87f0Cf85dbfE6dc572eb4E2FD1FD46e96F475" target="_blank" rel="noreferrer" title="0x0be87f0Cf85dbfE6dc572eb4E2FD1FD46e96F475"><code>0x0be8...F475</code></a></td></tr>
+        <tr><td>Sortition</td><td><a href="https://sepolia.basescan.org/address/0x14439Fa27258c8fd65F5805eA5617774891f173c" target="_blank" rel="noreferrer" title="0x14439Fa27258c8fd65F5805eA5617774891f173c"><code>0x1443...173c</code></a></td></tr>
+        <tr><td>Conviction</td><td><a href="https://sepolia.basescan.org/address/0x3fFb77D2A380C52e04b8d22E73EDc7d47e8f975c" target="_blank" rel="noreferrer" title="0x3fFb77D2A380C52e04b8d22E73EDc7d47e8f975c"><code>0x3fFb...975c</code></a></td></tr>
+        <tr><td>Sowellian</td><td><a href="https://sepolia.basescan.org/address/0x55C89331FA2F6a71E375c6C2aAf9BbE5b9b17fFe" target="_blank" rel="noreferrer" title="0x55C89331FA2F6a71E375c6C2aAf9BbE5b9b17fFe"><code>0x55C8...7fFe</code></a></td></tr>
+        <tr><td>Decision Markets</td><td><a href="https://sepolia.basescan.org/address/0x801883FD3347e5F400fF8CE24015D60449f26dAf" target="_blank" rel="noreferrer" title="0x801883FD3347e5F400fF8CE24015D60449f26dAf"><code>0x8018...6dAf</code></a></td></tr>
+        <tr><td>Pyth Entropy adapter (Sortition)</td><td><a href="https://sepolia.basescan.org/address/0xaB7325AFfF2A7851457c52565Cfe4DC53DC9B1Fc" target="_blank" rel="noreferrer" title="0xaB7325AFfF2A7851457c52565Cfe4DC53DC9B1Fc"><code>0xaB73...B1Fc</code></a></td></tr>
+        <tr><td>Pyth price adapter (Sowellian)</td><td><a href="https://sepolia.basescan.org/address/0x9d109ba81002B85a48252115Ed5487F6b60C78F9" target="_blank" rel="noreferrer" title="0x9d109ba81002B85a48252115Ed5487F6b60C78F9"><code>0x9d10...78F9</code></a></td></tr>
+      </table>
+
+      <h3 id="doc-chain-hyperevm">HyperEVM testnet (chain 998)</h3>
+      <p>All ten governance factories, plus their Pyth adapters, are live and verifiable on the <a href="https://testnet.hyperevm-explorer.xyz" target="_blank" rel="noreferrer" style="color:var(--accent)">HyperEVM testnet explorer</a>.</p>
+      <table class="cmd-table">
+        <tr><th>Contract</th><th>Address</th></tr>
+        <tr><td>Token-weighted</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0x0be87f0Cf85dbfE6dc572eb4E2FD1FD46e96F475" target="_blank" rel="noreferrer" title="0x0be87f0Cf85dbfE6dc572eb4E2FD1FD46e96F475"><code>0x0be8...F475</code></a></td></tr>
+        <tr><td>Quadratic</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0xe61C9d371D3BEA6ceA5359E745593D8ebB39BEC5" target="_blank" rel="noreferrer" title="0xe61C9d371D3BEA6ceA5359E745593D8ebB39BEC5"><code>0xe61C...BEC5</code></a></td></tr>
+        <tr><td>Liquid</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0xd85923722591C005a23840Cd95B6888ABD11a345" target="_blank" rel="noreferrer" title="0xd85923722591C005a23840Cd95B6888ABD11a345"><code>0xd859...a345</code></a></td></tr>
+        <tr><td>Optimistic</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0x5107BEfC0fEbE1E16bb8F408768bc5FF9F872658" target="_blank" rel="noreferrer" title="0x5107BEfC0fEbE1E16bb8F408768bc5FF9F872658"><code>0x5107...2658</code></a></td></tr>
+        <tr><td>Delegate</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0x10F551fF56455366AE7E9D3c3BBc96c9f058E821" target="_blank" rel="noreferrer" title="0x10F551fF56455366AE7E9D3c3BBc96c9f058E821"><code>0x10F5...E821</code></a></td></tr>
+        <tr><td>Board</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0xcabF9a1c3e3e54715c52dfB45ae1AB7E1C3D3606" target="_blank" rel="noreferrer" title="0xcabF9a1c3e3e54715c52dfB45ae1AB7E1C3D3606"><code>0xcabF...3606</code></a></td></tr>
+        <tr><td>Sortition</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0x867b9e9edD9dE98979c9C6a82EEc363B077B96De" target="_blank" rel="noreferrer" title="0x867b9e9edD9dE98979c9C6a82EEc363B077B96De"><code>0x867b...96De</code></a></td></tr>
+        <tr><td>Conviction</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0xBF49Fc7a3788c0CA53420ee6ccDA4aD9C5457362" target="_blank" rel="noreferrer" title="0xBF49Fc7a3788c0CA53420ee6ccDA4aD9C5457362"><code>0xBF49...7362</code></a></td></tr>
+        <tr><td>Sowellian</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0xa9356ccA371D3b91a82f1fee3898E8ef444E512E" target="_blank" rel="noreferrer" title="0xa9356ccA371D3b91a82f1fee3898E8ef444E512E"><code>0xa935...512E</code></a></td></tr>
+        <tr><td>Decision Markets</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0xAe322E1265530C58b03a2C36ab085500B9bc6624" target="_blank" rel="noreferrer" title="0xAe322E1265530C58b03a2C36ab085500B9bc6624"><code>0xAe32...6624</code></a></td></tr>
+        <tr><td>Pyth Entropy adapter (Sortition)</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0xeEdE1CBa9f2A86AEB145a71167ee2020396C3BD3" target="_blank" rel="noreferrer" title="0xeEdE1CBa9f2A86AEB145a71167ee2020396C3BD3"><code>0xeEdE...3BD3</code></a></td></tr>
+        <tr><td>Pyth price adapter (Sowellian)</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0x801883FD3347e5F400fF8CE24015D60449f26dAf" target="_blank" rel="noreferrer" title="0x801883FD3347e5F400fF8CE24015D60449f26dAf"><code>0x8018...6dAf</code></a></td></tr>
+      </table>
+
+      <h3 id="doc-chain-sepolia">Ethereum Sepolia (chain 11155111)</h3>
+      <p>The Opportunity Market factory is live and verifiable on <a href="https://sepolia.etherscan.io" target="_blank" rel="noreferrer" style="color:var(--accent)">Etherscan</a>.</p>
+      <table class="cmd-table">
+        <tr><th>Contract</th><th>Address</th></tr>
+        <tr><td>OpportunityMarketFactory</td><td><a href="https://sepolia.etherscan.io/address/0xE9fF23EA5FE342568B5Db083E937f397C75c4625" target="_blank" rel="noreferrer" title="0xE9fF23EA5FE342568B5Db083E937f397C75c4625"><code>0xE9fF...4625</code></a></td></tr>
+      </table>
     </div>
   </div>
 </div>

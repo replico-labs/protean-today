@@ -70,12 +70,19 @@ the HTML in place.
 
 ### Adding a chain's factory addresses
 
-Each verified address in the docs' "Chains & contracts" table links
-directly to that chain's block explorer (e.g.
-`https://testnet.monadvision.com/address/<address>` for Monad). When
-adding Base or HyperEVM addresses once they're deployed, confirm the
-real explorer URL for that specific chain first — don't guess or reuse
-Monad's pattern blindly, since each chain's explorer has its own
+Each verified address in the docs' "Chains & contracts" section links
+directly to that chain's own block explorer, using the pattern
+`<explorer>/address/<address>`:
+
+| Network | Chain ID | Explorer |
+|---|---|---|
+| Monad testnet | 10143 | `https://testnet.monadvision.com` |
+| Base Sepolia | 84532 | `https://sepolia.basescan.org` |
+| HyperEVM testnet | 998 | `https://testnet.hyperevm-explorer.xyz` |
+| Ethereum Sepolia | 11155111 | `https://sepolia.etherscan.io` |
+
+When a new chain is added, confirm its real explorer URL first rather
+than reusing another chain's pattern, since each explorer has its own
 domain and URL shape.
 
 ### Bot links
