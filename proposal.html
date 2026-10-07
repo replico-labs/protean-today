@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Proposal — Protean</title>
+<!-- The bot's public URL: it serves this page's data at /api/proposals/... -->
+<meta name="protean-api" content="https://protean-bot-production.up.railway.app">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #12072A;
+    --panel: #1C1038;
+    --panel-2: #241546;
+    --border: #2F2255;
+    --text: #F1EDFB;
+    --text-dim: #A49CC2;
+    --accent: #B39CF5;
+    --accent-soft: rgba(179, 156, 245, 0.15);
+    --ok: #4ADE80;
+    --warn: #F5C26B;
+    --bad: #F48A8A;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  a { color: var(--accent); }
+  code, .mono { font-family: 'JetBrains Mono', monospace; }
+  ::selection { background: var(--accent); color: var(--bg); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+  @media (max-width: 640px) { .wrap { padding: 0 16px; } }
+
+  nav.topnav { position: sticky; top: 0; z-index: 40; background: rgba(18,7,42,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+  .topnav-inner { max-width: 1080px; margin: 0 auto; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; }
+  @media (max-width: 640px) { .topnav-inner { padding: 14px 16px; } }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .brand img.mark { height: 26px; width: auto; display: block; }
+  .brand img.word { height: 13px; width: auto; display: block; }
+  .navlinks { display: flex; gap: 24px; font-size: 15px; }
+  .navlinks a { color: var(--text-dim); text-decoration: none; }
+  .navlinks a:hover { color: var(--text); }
+
+  main { padding: 48px 0 96px; }
+  @media (max-width: 640px) { main { padding: 28px 0 64px; } }
+
+  .crumbs { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--text-dim); margin-bottom: 14px; word-break: break-all; }
+  h1 { font-size: clamp(26px, 4vw, 40px); line-height: 1.15; margin: 0 0 12px; font-weight: 600; letter-spacing: -0.01em; overflow-wrap: anywhere; }
+  .summary { color: var(--text-dim); font-size: 18px; margin: 0 0 8px; max-width: 720px; overflow-wrap: anywhere; }
+
+  .state { display: inline-block; font-size: 12px; font-family: 'JetBrains Mono', monospace; padding: 3px 10px; border-radius: 20px; background: var(--accent-soft); color: var(--accent); margin-right: 10px; vertical-align: middle; }
+  .state.ok { background: rgba(74,222,128,0.15); color: var(--ok); }
+  .state.bad { background: rgba(244,138,138,0.15); color: var(--bad); }
+
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 40px; margin-top: 32px; align-items: start; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; gap: 28px; } }
+
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+  .panel h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin: 0 0 14px; font-weight: 600; }
+  .panel + .panel { margin-top: 20px; }
+
+  .body p { margin: 0 0 14px; overflow-wrap: anywhere; }
+  .body p:last-child { margin-bottom: 0; }
+  .empty { color: var(--text-dim); font-style: italic; }
+
+  .facts { display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; font-size: 14.5px; }
+  .facts dt { color: var(--text-dim); }
+  .facts dd { margin: 0; text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; overflow-wrap: anywhere; }
+
+  .links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  .links a { overflow-wrap: anywhere; }
+
+  .actions { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; font-size: 13px; }
+  .actions li { font-family: 'JetBrains Mono', monospace; color: var(--text-dim); overflow-wrap: anywhere; }
+
+  .live { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-dim); }
+  .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+  .fine { font-size: 12.5px; color: var(--text-dim); margin-top: 14px; overflow-wrap: anywhere; }
+
+  /* Edit form */
+  form { display: flex; flex-direction: column; gap: 16px; }
+  label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--text-dim); }
+  input, textarea { width: 100%; background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font: inherit; font-size: 15px; padding: 11px 13px; }
+  textarea { min-height: 220px; resize: vertical; }
+  input:focus, textarea:focus { outline: none; border-color: var(--accent); }
+  .link-row { display: grid; grid-template-columns: 160px 1fr auto; gap: 8px; }
+  @media (max-width: 560px) { .link-row { grid-template-columns: 1fr; } }
+  .btn { display: inline-block; padding: 11px 20px; font-size: 15px; font-weight: 600; border-radius: 10px; cursor: pointer; border: 1px solid var(--border); color: var(--text); background: none; font-family: inherit; }
+  .btn:hover { border-color: var(--text-dim); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .btn-primary:disabled { opacity: 0.6; cursor: default; }
+  .btn-small { padding: 8px 12px; font-size: 13px; }
+  .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .notice { border-radius: 10px; padding: 12px 14px; font-size: 14.5px; background: var(--accent-soft); color: var(--text); }
+  .notice.bad { background: rgba(244,138,138,0.12); }
+  .notice.ok { background: rgba(74,222,128,0.12); }
+  .count { font-size: 12px; color: var(--text-dim); align-self: flex-end; }
+
+  .loading { color: var(--text-dim); padding: 48px 0; }
+  footer { border-top: 1px solid var(--border); padding: 28px 0; color: var(--text-dim); font-size: 13.5px; }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="/" aria-label="Protean home">
+      <img class="mark" src="/logo-mark.svg" alt="">
+      <img class="word" src="/logo-wordmark.svg" alt="Protean">
+    </a>
+    <div class="navlinks"><a href="/">Home</a></div>
+  </div>
+</nav>
+
+<main class="wrap" id="app">
+  <div class="loading">Loading proposal…</div>
+</main>
+
+<footer><div class="wrap">Protean — the governance layer for social messengers.</div></footer>
+
+<script>
+(() => {
+  const API = document.querySelector('meta[name="protean-api"]').content.replace(/\/+$/, "");
+  const app = document.getElementById("app");
+  const parts = location.pathname.split("/").filter(Boolean); // p, network, dao, id
+  const [, network, dao, id] = parts;
+  const editToken = new URLSearchParams(location.search).get("edit");
+  const endpoint = `${API}/api/proposals/${encodeURIComponent(network || "")}/${encodeURIComponent(dao || "")}/${encodeURIComponent(id || "")}`;
+  let data = null;
+
+  // Everything user-written goes in as text, never HTML.
+  function el(tag, attrs = {}, ...children) {
+    const node = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (v === undefined || v === null || v === false) continue;
+      if (k === "class") node.className = v;
+      else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
+      else node.setAttribute(k, v);
+    }
+    for (const c of children.flat()) if (c !== undefined && c !== null && c !== false) node.append(c.nodeType ? c : String(c));
+    return node;
+  }
+
+  const safeUrl = (u) => { try { const x = new URL(u); return x.protocol === "https:" || x.protocol === "http:" ? x.href : null; } catch { return null; } };
+  const MODEL_NAMES = { tokenWeighted: "Token-weighted", quadratic: "Quadratic", liquid: "Liquid", optimistic: "Optimistic", delegate: "Delegate", board: "Board", sortition: "Sortition", conviction: "Conviction", sowellian: "Sowellian", decisionMarkets: "Decision Markets" };
+  const short = (a) => (a && a.length > 12 ? `${a.slice(0, 6)}…${a.slice(-4)}` : a || "");
+  const when = (t) => (t ? new Date(t * 1000).toLocaleString() : "");
+  const explorerLink = (live, address) => (live.explorer ? el("a", { href: `${live.explorer}/address/${address}`, target: "_blank", rel: "noreferrer" }, short(address)) : short(address));
+
+  /** Plain text to paragraphs, with bare links made clickable. */
+  function richText(text) {
+    return text.split(/\n{2,}/).map((para) => {
+      const p = el("p");
+      para.split(/(https?:\/\/[^\s<>"]+)/g).forEach((chunk, i) => {
+        if (i % 2 === 1 && safeUrl(chunk)) p.append(el("a", { href: chunk, target: "_blank", rel: "noreferrer nofollow" }, chunk));
+        else chunk.split("\n").forEach((line, j) => { if (j) p.append(el("br")); p.append(line); });
+      });
+      return p;
+    });
+  }
+
+  function stateClass(state) {
+    if (/executed|succeeded|passed/i.test(state)) return "state ok";
+    if (/defeated|cancelled|expired|failed/i.test(state)) return "state bad";
+    return "state";
+  }
+
+  function render() {
+    const { live, details, submittable } = data;
+    const title = details?.title || `Proposal #${live.id}`;
+    document.title = `${title} — Protean`;
+
+    const main = el("div", {},
+      el("div", { class: "crumbs" }, `${live.chain} · ${MODEL_NAMES[live.model] || live.model} DAO ${short(dao)} · #${live.id}`),
+      el("h1", {}, title),
+      details?.summary ? el("p", { class: "summary" }, details.summary) : null,
+      el("div", {}, el("span", { class: stateClass(live.state) }, live.state), el("span", { class: "live" }, "Live from the chain")),
+    );
+
+    const left = el("div", {});
+    if (editToken && !details) left.append(editForm(submittable));
+    left.append(el("div", { class: "panel" },
+      el("h2", {}, "Details"),
+      details?.body ? el("div", { class: "body" }, richText(details.body))
+        : el("p", { class: "empty" }, details ? "No further details." : "The proposer hasn't added details yet."),
+    ));
+    if (details?.links?.length) {
+      left.append(el("div", { class: "panel" }, el("h2", {}, "Links"),
+        el("ul", { class: "links" }, details.links.map((l) => {
+          const href = safeUrl(l.url);
+          return el("li", {}, href ? el("a", { href, target: "_blank", rel: "noreferrer nofollow" }, l.label || l.url) : l.url);
+        }))));
+    }
+    left.append(el("div", { class: "panel" }, el("h2", {}, "On-chain description"), el("div", { class: "body" }, live.description ? richText(live.description) : el("p", { class: "empty" }, "None"))));
+
+    const facts = el("dl", { class: "facts" });
+    const fact = (k, v) => { if (v !== null && v !== undefined && v !== "") facts.append(el("dt", {}, k), el("dd", {}, v)); };
+    live.facts.forEach((f) => fact(f.label, f.value));
+    if (live.voting) fact("Voting blocks", `${live.voting.startBlock} → ${live.voting.endBlock}`);
+    fact("Trading deadline", when(live.tradingDeadline));
+    fact("Queued", when(live.queuedAt));
+    fact("Executable after", when(live.executableAfter));
+    if (live.proposer) fact("Proposer", explorerLink(live, live.proposer));
+
+    const right = el("div", {},
+      el("div", { class: "panel" }, el("h2", {}, "Status"), facts),
+      el("div", { class: "panel" }, el("h2", {}, `Actions (${live.actions.length})`),
+        el("ul", { class: "actions" }, live.actions.map((a, i) => el("li", {}, `${i + 1}. `, explorerLink(live, a.target), a.value !== "0" ? ` · ${a.value} ${live.nativeSymbol}` : "", a.data && a.data !== "0x" ? ` · ${a.data.slice(0, 10)}` : "")))),
+      el("p", { class: "fine" }, details?.contentHash
+        ? `Submitted by the proposer ${new Date(details.updatedAt).toLocaleString()} and fixed since. Fingerprint: ${details.contentHash.slice(0, 16)}…`
+        : submittable ? "Waiting for the proposer to add details." : "The proposer didn't add details."),
+    );
+
+    app.replaceChildren(main, el("div", { class: "layout" }, left, right));
+  }
+
+  function editForm(submittable) {
+    const panel = el("div", { class: "panel" }, el("h2", {}, "Add the details (only you have this link)"));
+    if (!submittable) {
+      panel.append(el("div", { class: "notice bad" }, "It's too late to add details: people have started voting on or backing this proposal, or the 72-hour window ended."));
+      return panel;
+    }
+    const details = null;
+    const titleIn = el("input", { maxlength: "140", required: true, value: details?.title || "" });
+    const summaryIn = el("textarea", { maxlength: "600", style: "min-height:80px" });
+    summaryIn.value = details?.summary || "";
+    const bodyIn = el("textarea", { maxlength: "20000" });
+    bodyIn.value = details?.body || "";
+    const linksBox = el("div", { style: "display:flex;flex-direction:column;gap:8px" });
+    const addLink = (l = {}) => {
+      if (linksBox.children.length >= 10) return;
+      const row = el("div", { class: "link-row" },
+        el("input", { placeholder: "Label", maxlength: "80", value: l.label || "", "data-k": "label" }),
+        el("input", { placeholder: "https://…", maxlength: "500", value: l.url || "", "data-k": "url" }),
+        el("button", { type: "button", class: "btn btn-small", onclick: () => row.remove() }, "Remove"));
+      linksBox.append(row);
+    };
+    (details?.links || []).forEach(addLink);
+    const status = el("div");
+    const save = el("button", { class: "btn btn-primary", type: "submit" }, "Submit details");
+
+    const form = el("form", { onsubmit: async (e) => {
+      e.preventDefault();
+      save.disabled = true;
+      if (!confirm("Submit these details? They can't be changed afterwards.")) { save.disabled = false; return; }
+      status.replaceChildren(el("div", { class: "notice" }, "Submitting…"));
+      const links = [...linksBox.children].map((row) => ({
+        label: row.querySelector('[data-k="label"]').value,
+        url: row.querySelector('[data-k="url"]').value,
+      }));
+      try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ token: editToken, title: titleIn.value, summary: summaryIn.value, body: bodyIn.value, links }),
+        });
+        const out = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(out.error || `Submitting failed (${res.status}).`);
+        await load();
+      } catch (err) {
+        status.replaceChildren(el("div", { class: "notice bad" }, err.message));
+        save.disabled = false;
+      }
+    } },
+      el("label", {}, "Title", titleIn),
+      el("label", {}, "Summary — one or two sentences", summaryIn),
+      el("label", {}, "Details — motivation, plan, costs, risks. Separate paragraphs with a blank line.", bodyIn),
+      el("div", {}, el("div", { style: "font-size:14px;color:var(--text-dim);margin-bottom:6px" }, "Links"), linksBox,
+        el("button", { type: "button", class: "btn btn-small", style: "margin-top:8px", onclick: () => addLink() }, "Add link")),
+      status,
+      el("div", { class: "row" }, save),
+      el("p", { class: "fine" }, "You submit this once and it can't be changed afterwards, so what people support is what they read. Check it before submitting."),
+    );
+    panel.append(form);
+    return panel;
+  }
+
+  async function load() {
+    const res = await fetch(endpoint);
+    const out = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(out.error || `Couldn't load this proposal (${res.status}).`);
+    data = out;
+    render();
+  }
+
+  if (parts[0] !== "p" || !network || !dao || !id) {
+    app.replaceChildren(el("div", { class: "loading" }, "No proposal here. Proposal pages look like /p/<network>/<dao>/<id>."));
+    return;
+  }
+  load().catch((err) => app.replaceChildren(el("div", { class: "notice bad", style: "margin-top:24px" }, err.message)));
+  // Live data: refresh while the page is open, but never under an open form.
+  setInterval(() => { if (!document.querySelector("form") && document.visibilityState === "visible") load().catch(() => {}); }, 20000);
+})();
+</script>
+</body>
+</html>

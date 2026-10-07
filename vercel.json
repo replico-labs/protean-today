@@ -3,5 +3,8 @@
   "framework": null,
   "buildCommand": null,
   "outputDirectory": ".",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/p/:network/:dao/:id", "destination": "/proposal" }
+  ]
 }

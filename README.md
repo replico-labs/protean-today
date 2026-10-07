@@ -99,6 +99,15 @@ Note that the Discord invite URL contains `&amp;` rather than `&` —
 that's correct HTML for an ampersand inside an attribute, and browsers
 decode it back to a normal `&` when the link is clicked.
 
+## Proposal pages
+
+`proposal.html` is the page for one DAO proposal, at `/p/<network>/<dao>/<id>` (the rewrite is in `vercel.json`). The bot links to it after every proposal and in `/proposal <id>`.
+
+- **Data comes from the bot**, not from this site: the page fetches `GET <bot>/api/proposals/<network>/<dao>/<id>` for the proposer's details and live on-chain state (refreshed every 20 seconds), and the edit form `POST`s back there. The bot's URL is the `protean-api` meta tag at the top of `proposal.html` - change it there if the bot moves.
+- **Details are submitted once**, only through the private link the bot sends the proposer (`?edit=<signed token>`, checked by the bot), and never change afterwards. They can only be submitted before anyone votes or backs the proposal, within 72 hours.
+- **No secrets here.** Everything sensitive (the signing secret, Supabase) lives in the bot. Everything a proposer writes is rendered as text, never HTML.
+- The bot needs `PROPOSAL_SITE_URL` set to this site's URL (it builds the links from it, and only accepts requests from it).
+
 ## Related repositories
 
 - **Governance contracts** (Solidity, Foundry)
