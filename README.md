@@ -87,7 +87,7 @@ domain and URL shape.
 
 ### Bot links
 
-All three platform cards in `#bots` (Telegram, Discord, Slack) are live
+All four platform cards in `#bots` (Telegram, Discord, Slack, and WhatsApp, which is tagged experimental) are live
 and link to their real install/invite URLs. To change a link, edit the
 `href` on that platform's `<a class="bot-cta live">` directly. To add a
 new platform later, copy an existing card and, until its link exists,

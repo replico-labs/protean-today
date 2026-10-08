@@ -168,7 +168,7 @@
   .placeholder-note { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); border: 1px dashed var(--border); padding: 3px 8px; border-radius: 20px; }
 
   /* ---------- BOTS / GET STARTED ---------- */
-  .bot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .bot-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
   @media (max-width: 760px) { .bot-grid { grid-template-columns: 1fr; } }
   .bot-cell { background: var(--panel); padding: 28px; display: flex; flex-direction: column; gap: 14px; }
   .bot-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: var(--accent-soft); color: var(--accent); }
@@ -177,6 +177,7 @@
   .bot-cell p { color: var(--text-dim); font-size: 14.5px; margin: 0; flex: 1; }
   .bot-cta { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; padding: 10px 16px; border-radius: 10px; border: 1px dashed var(--border); color: var(--text-dim); width: fit-content; }
   a.bot-cta.live { border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent); text-decoration: none; }
+  .exp-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; color: var(--accent); border: 1px dashed var(--accent); padding: 2px 8px; border-radius: 20px; margin-left: 8px; vertical-align: middle; letter-spacing: 0.02em; }
   a.bot-cta.live:hover { background: var(--accent); color: var(--bg); }
 </style>
 </head>
@@ -230,15 +231,6 @@
       </div>
     </div>
   </header>
-
-  <section class="block">
-    <div class="wrap">
-      <h2>Communities are stuck choosing between two broken options.</h2>
-      <p class="lede">Web2 tools make collective ownership difficult, with no safe way to pool or spend group money inside a chat app. Web3 frameworks force people out of the chat entirely, onto a separate site, with a treasury permanently welded to one voting contract. Changing your mind about governance means a risky, expensive fund migration.</p>
-      <p class="lede">Protean removes that trade-off entirely. Governance runs directly inside the chat your community already uses, with no separate site and no new habit to build. Because the treasury and the voting logic are deliberately kept apart, a community can change how it governs as it evolves, moving from a simple multisig to quadratic voting later, without ever touching the funds themselves.</p>
-      <p class="lede">A single approved proposal can already reach real onchain applications atomically, through Protean's verified action library. The next step is doing the same for the offchain side: a compliant banking tool that executes a payment the moment the DAO approves it, no separate manual step required. For communities that need real-world standing, optional legal wrappers, a Wyoming DUNA or a Marshall Islands DAO LLC, turn an onchain treasury into a recognized legal entity.</p>
-    </div>
-  </section>
 
   <section class="block">
     <div class="wrap">
@@ -309,6 +301,12 @@
           <h3>Slack</h3>
           <p>Run governance from your team's workspace.</p>
           <a class="bot-cta live" href="https://protean-bot-production.up.railway.app/slack/install" target="_blank" rel="noreferrer">Add to Slack</a>
+        </div>
+        <div class="bot-cell">
+          <div class="bot-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20l1.3-4.2A8 8 0 1 1 8.3 18.8L4 20z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-1.8-.9-.8.8c-.9-.4-1.6-1.1-2-2l.8-.8-.9-1.8L9 9.5z" fill="currentColor"/></svg></div>
+          <h3>WhatsApp<span class="exp-tag">experimental</span></h3>
+          <p>Try Protean on WhatsApp. This bot is early, so expect rough edges.</p>
+          <a class="bot-cta live" href="https://wa.me/message/6JNHAJABFJY6M1" target="_blank" rel="noreferrer">Message on WhatsApp</a>
         </div>
       </div>
     </div>
@@ -385,6 +383,10 @@
       <h2 id="doc-overview">Overview</h2>
       <p class="doc-lede">Protean is the governance layer for social messengers: programmable, on-chain governance mechanisms brought directly into Telegram, Discord, and Slack.</p>
       <p>Instead of forcing every community into the same governance model, Protean provides modular governance primitives that deploy directly inside the chat a community already uses. A DAO's treasury and its voting logic are deliberately separate, so a group can change how it decides things without ever migrating funds.</p>
+      <h3>The problem it solves</h3>
+      <p>Communities are usually stuck choosing between two broken options. Web2 tools make collective ownership difficult, with no safe way to pool or spend group money inside a chat app. Web3 frameworks force people out of the chat onto a separate site, with a treasury permanently welded to one voting contract, so changing your mind about governance means a risky, expensive fund migration.</p>
+      <h3>How Protean approaches it</h3>
+      <p>Governance runs directly inside the chat a community already uses, with no separate site and no new habit to build. Because the treasury and the voting logic are kept apart, a community can change how it governs as it evolves, for example moving from a simple multisig to quadratic voting later, without ever touching the funds.</p>
       <p>A passed proposal can already execute real onchain actions atomically through Protean's verified action library, reaching Treasury, tokens, and connected wrappers in one approved step. The planned offchain counterpart is a compliant banking tool that executes a payment the moment a DAO approves it, with no separate manual step required. Optional legal wrappers, such as a Wyoming DUNA or a Marshall Islands DAO LLC, are also available for communities that need real-world legal standing for their onchain treasury.</p>
 
       <h2 id="doc-architecture">Architecture</h2>
