@@ -158,7 +158,8 @@
   const MODEL_NAMES = { tokenWeighted: "Token-weighted", quadratic: "Quadratic", liquid: "Liquid", optimistic: "Optimistic", delegate: "Delegate", board: "Board", sortition: "Sortition", conviction: "Conviction", sowellian: "Sowellian", decisionMarkets: "Decision Markets" };
   const short = (a) => (a && a.length > 12 ? `${a.slice(0, 6)}…${a.slice(-4)}` : a || "");
   const when = (t) => (t ? new Date(t * 1000).toLocaleString() : "");
-  const explorerLink = (live, address) => (live.explorer ? el("a", { href: `${live.explorer}/address/${address}`, target: "_blank", rel: "noreferrer" }, short(address)) : short(address));
+  // EVM explorers take /address/<a>; Solana's adds ?cluster=devnet (explorerQuery).
+  const explorerLink = (live, address) => (live.explorer ? el("a", { href: `${live.explorer}/address/${address}${live.explorerQuery || ""}`, target: "_blank", rel: "noreferrer" }, short(address)) : short(address));
 
   /** Plain text to paragraphs, with bare links made clickable. */
   function richText(text) {
@@ -208,8 +209,9 @@
 
     const facts = el("dl", { class: "facts" });
     const fact = (k, v) => { if (v !== null && v !== undefined && v !== "") facts.append(el("dt", {}, k), el("dd", {}, v)); };
-    live.facts.forEach((f) => fact(f.label, f.value));
+    live.facts.forEach((f) => fact(f.label, f.address ? explorerLink(live, f.value) : f.value));
     if (live.voting) fact("Voting blocks", `${live.voting.startBlock} → ${live.voting.endBlock}`);
+    (live.times || []).forEach((t) => fact(t.label, when(t.at)));
     fact("Trading deadline", when(live.tradingDeadline));
     fact("Queued", when(live.queuedAt));
     fact("Executable after", when(live.executableAfter));
@@ -218,7 +220,10 @@
     const right = el("div", {},
       el("div", { class: "panel" }, el("h2", {}, "Status"), facts),
       el("div", { class: "panel" }, el("h2", {}, `Actions (${live.actions.length})`),
-        el("ul", { class: "actions" }, live.actions.map((a, i) => el("li", {}, `${i + 1}. `, explorerLink(live, a.target), a.value !== "0" ? ` · ${a.value} ${live.nativeSymbol}` : "", a.data && a.data !== "0x" ? ` · ${a.data.slice(0, 10)}` : "")))),
+        el("ul", { class: "actions" }, live.actions.map((a, i) => a.label
+          // Solana instructions come described in words by the bot.
+          ? el("li", {}, `${i + 1}. ${a.label}`)
+          : el("li", {}, `${i + 1}. `, explorerLink(live, a.target), a.value !== "0" ? ` · ${a.value} ${live.nativeSymbol}` : "", a.data && a.data !== "0x" ? ` · ${a.data.slice(0, 10)}` : "")))),
       el("p", { class: "fine" }, details?.contentHash
         ? `Submitted by the proposer ${new Date(details.updatedAt).toLocaleString()} and fixed since. Fingerprint: ${details.contentHash.slice(0, 16)}…`
         : submittable ? "Waiting for the proposer to add details." : "The proposer didn't add details."),
@@ -229,9 +234,13 @@
 
   function editForm(submittable) {
     const panel = el("div", { class: "panel" }, el("h2", {}, "Add the details (only you have this link)"));
+    const win = data.detailsWindow || { graceHours: 6, windowHours: 72 };
     if (!submittable) {
-      panel.append(el("div", { class: "notice bad" }, "It's too late to add details: people have started voting on or backing this proposal, or the 72-hour window ended."));
+      panel.append(el("div", { class: "notice bad" }, `It's too late to add details: the first ${win.graceHours} hours are over and people have started voting on or backing this proposal, or the ${win.windowHours}-hour window ended.`));
       return panel;
+    }
+    if (data.live.started) {
+      panel.append(el("div", { class: "notice", style: "margin-bottom:16px" }, `Voting has started, so submit soon: details can only be added within ${win.graceHours} hours of proposing once people are voting.`));
     }
     const details = null;
     const titleIn = el("input", { maxlength: "140", required: true, value: details?.title || "" });
