@@ -225,7 +225,7 @@
     <div class="wrap">
       <h1>One treasury.<br>Every governance shape it needs to take: <span class="cycle-word" id="cycleWord">Quadratic.</span></h1>
       <p class="platform-line">Right in your favourite <span class="cycle-word" id="platformCycleWord">Telegram group</span>.</p>
-      <p class="sub">Protean brings programmable, on-chain governance into Telegram, Discord, and Slack, the places your community already coordinates. Eleven mechanisms, one treasury, swap models without ever moving funds.</p>
+      <p class="sub">Protean brings programmable, on-chain governance into Telegram, Discord, Slack, and WhatsApp, the places your community already coordinates. Eleven mechanisms, one treasury, swap models without ever moving funds.</p>
       <div class="cta-row">
         <a class="btn btn-primary" href="#bots">Get started</a>
         <a class="btn" href="#" onclick="showView('docs'); return false;">Read the docs</a>
@@ -388,7 +388,7 @@
     <div class="docs-content">
 
       <h2 id="doc-overview">Overview</h2>
-      <p class="doc-lede">Protean is the governance layer for social messengers: programmable, on-chain governance mechanisms brought directly into Telegram, Discord, and Slack.</p>
+      <p class="doc-lede">Protean is the governance layer for social messengers: programmable, on-chain governance mechanisms brought directly into Telegram, Discord, Slack, and WhatsApp (experimental).</p>
       <p>Instead of forcing every community into the same governance model, Protean provides modular governance primitives that deploy directly inside the chat a community already uses. A DAO's treasury and its voting logic are deliberately separate, so a group can change how it decides things without ever migrating funds.</p>
       <h3>The problem it solves</h3>
       <p>Communities are usually stuck choosing between two broken options. Web2 tools make collective ownership difficult, with no safe way to pool or spend group money inside a chat app. Web3 frameworks force people out of the chat onto a separate site, with a treasury permanently welded to one voting contract, so changing your mind about governance means a risky, expensive fund migration.</p>
@@ -397,10 +397,11 @@
       <p>A passed proposal can already execute real onchain actions atomically through Protean's verified action library, reaching Treasury, tokens, and connected wrappers in one approved step. The planned offchain counterpart is a compliant banking tool that executes a payment the moment a DAO approves it, with no separate manual step required. Optional legal wrappers, such as a Wyoming DUNA or a Marshall Islands DAO LLC, are also available for communities that need real-world legal standing for their onchain treasury.</p>
 
       <h2 id="doc-architecture">Architecture</h2>
-      <p class="doc-lede">Three parts: the governance contracts, the bot interfaces, and this site.</p>
+      <p class="doc-lede">Four parts: the governance contracts (EVM and Solana), the bot interfaces, and this site.</p>
       <div class="arch-diagram">
-        <div class="arch-row"><span class="label">contracts</span><span class="note">Solidity: one factory per governance model, deployed with Foundry</span></div>
-        <div class="arch-row"><span class="label">bot</span><span class="note">Node.js: handles all interaction and transaction execution on Telegram, Discord, and Slack</span></div>
+        <div class="arch-row"><span class="label">contracts</span><span class="note">Solidity: one factory per governance model, deployed with Foundry. Source in the <a href="https://github.com/replico-labs/Spaces" target="_blank" rel="noreferrer">Spaces</a> repo</span></div>
+        <div class="arch-row"><span class="label">solana</span><span class="note">Anchor programs: a hub plus a program per governance model. Source in the <a href="https://github.com/replico-labs/Vortexes" target="_blank" rel="noreferrer">Vortexes</a> repo</span></div>
+        <div class="arch-row"><span class="label">bot</span><span class="note">Node.js (<a href="https://github.com/replico-labs/protean-bot" target="_blank" rel="noreferrer">protean-bot</a>): handles all interaction and transaction execution on Telegram, Discord, and Slack, plus an experimental WhatsApp bot</span></div>
         <div class="arch-row"><span class="label">connect</span><span class="note">This site: onboarding for people integrating the bot</span></div>
       </div>
       <p>Every DAO gets its own, fully separate contract deployment: a real Governance contract, a real Treasury, a real governance token. Nothing is a shared proxy; each community's DAO is independent from every other.</p>
@@ -759,7 +760,7 @@
         <tr><td>Sortition</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0x867b9e9edD9dE98979c9C6a82EEc363B077B96De" target="_blank" rel="noreferrer" title="0x867b9e9edD9dE98979c9C6a82EEc363B077B96De"><code>0x867b...96De</code></a></td></tr>
         <tr><td>Conviction</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0xe0a07432bC7A9a3962B9B06AF539fDAc28e43dEc" target="_blank" rel="noreferrer" title="0xe0a07432bC7A9a3962B9B06AF539fDAc28e43dEc"><code>0xe0a0...3dEc</code></a></td></tr>
         <tr><td>Sowellian</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0xa9356ccA371D3b91a82f1fee3898E8ef444E512E" target="_blank" rel="noreferrer" title="0xa9356ccA371D3b91a82f1fee3898E8ef444E512E"><code>0xa935...512E</code></a></td></tr>
-        <tr><td>Decision Markets</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0xAe322E1265530C58b03a2C36ab085500B9bc6624" target="_blank" rel="noreferrer" title="0xAe322E1265530C58b03a2C36ab085500B9bc6624"><code>0xAe32...6624</code></a></td></tr>
+        <tr><td>Decision Markets</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0x6cef69879Ab6132ED2938A77Faa6d282D0545D85" target="_blank" rel="noreferrer" title="0x6cef69879Ab6132ED2938A77Faa6d282D0545D85"><code>0x6cef...5D85</code></a></td></tr>
         <tr><td>Pyth Entropy adapter (Sortition)</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0xeEdE1CBa9f2A86AEB145a71167ee2020396C3BD3" target="_blank" rel="noreferrer" title="0xeEdE1CBa9f2A86AEB145a71167ee2020396C3BD3"><code>0xeEdE...3BD3</code></a></td></tr>
         <tr><td>Pyth price adapter (Sowellian)</td><td><a href="https://testnet.hyperevm-explorer.xyz/address/0x801883FD3347e5F400fF8CE24015D60449f26dAf" target="_blank" rel="noreferrer" title="0x801883FD3347e5F400fF8CE24015D60449f26dAf"><code>0x8018...6dAf</code></a></td></tr>
       </table>

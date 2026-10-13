@@ -110,8 +110,6 @@ decode it back to a normal `&` when the link is clicked.
 
 ## Related repositories
 
-- **Governance contracts** (Solidity, Foundry)
-- **Bot** (Node.js — Telegram, Discord, Slack interfaces)
-- **protean-connect** — a separate, paused project for non-custodial
-  wallet linking via Privy; not currently used by the bot, unrelated
-  to this site
+- **[Spaces](https://github.com/replico-labs/Spaces)** — governance contracts (Solidity, Foundry)
+- **[Vortexes](https://github.com/replico-labs/Vortexes)** — Solana governance programs (Anchor)
+- **[protean-bot](https://github.com/replico-labs/protean-bot)** — Node.js bot (Telegram, Discord, Slack, and an experimental WhatsApp bot)
