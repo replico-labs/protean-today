@@ -108,6 +108,12 @@
   .notice { border-radius: 10px; padding: 12px 14px; font-size: 14.5px; background: var(--accent-soft); color: var(--text); }
   .notice.bad { background: rgba(244,138,138,0.12); }
   .notice.ok { background: rgba(74,222,128,0.12); }
+  .history { display: flex; flex-direction: column; gap: 10px; }
+  .history details { border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; background: var(--panel-2); }
+  .history summary { cursor: pointer; font-size: 14px; overflow-wrap: anywhere; }
+  .history .meta { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); }
+  .history .version-body { margin-top: 12px; font-size: 14.5px; }
+  .history .version-body h3 { font-size: 16px; margin: 0 0 8px; }
   .count { font-size: 12px; color: var(--text-dim); align-self: flex-end; }
 
   .loading { color: var(--text-dim); padding: 48px 0; }
@@ -180,7 +186,7 @@
   }
 
   function render() {
-    const { live, details, submittable } = data;
+    const { live, details, submittable, editable, history = [] } = data;
     const title = details?.title || `Proposal #${live.id}`;
     document.title = `${title} — Protean`;
 
@@ -192,7 +198,10 @@
     );
 
     const left = el("div", {});
-    if (editToken && !details) left.append(editForm(submittable));
+    if (editToken && !details) left.append(editForm({ open: submittable }));
+    else if (editToken && editable) left.append(editForm({ open: true, current: details }));
+    else if (editToken) left.append(el("div", { class: "panel" }, el("h2", {}, "Edit the details"),
+      el("div", { class: "notice bad" }, "These details can't be changed any more: the editing window is over, the version limit was reached, or they were uploaded before edit passwords existed.")));
     left.append(el("div", { class: "panel" },
       el("h2", {}, "Details"),
       details?.body ? el("div", { class: "body" }, richText(details.body))
@@ -205,6 +214,7 @@
           return el("li", {}, href ? el("a", { href, target: "_blank", rel: "noreferrer nofollow" }, l.label || l.url) : l.url);
         }))));
     }
+    if (history.length > 1) left.append(historyPanel(history));
     left.append(el("div", { class: "panel" }, el("h2", {}, "On-chain description"), el("div", { class: "body" }, live.description ? richText(live.description) : el("p", { class: "empty" }, "None"))));
 
     const facts = el("dl", { class: "facts" });
@@ -225,24 +235,50 @@
           ? el("li", {}, `${i + 1}. ${a.label}`)
           : el("li", {}, `${i + 1}. `, explorerLink(live, a.target), a.value !== "0" ? ` · ${a.value} ${live.nativeSymbol}` : "", a.data && a.data !== "0x" ? ` · ${a.data.slice(0, 10)}` : "")))),
       el("p", { class: "fine" }, details?.contentHash
-        ? `Submitted by the proposer ${new Date(details.updatedAt).toLocaleString()} and fixed since. Fingerprint: ${details.contentHash.slice(0, 16)}…`
+        ? (history.length > 1
+          ? `Version ${history.length}, saved by the proposer ${new Date(details.updatedAt).toLocaleString()}. Every earlier version is listed under History. Fingerprint: ${details.contentHash.slice(0, 16)}…`
+          : `Submitted by the proposer ${new Date(details.updatedAt).toLocaleString()}${editable ? "; any change shows up under History" : " and fixed since"}. Fingerprint: ${details.contentHash.slice(0, 16)}…`)
         : submittable ? "Waiting for the proposer to add details." : "The proposer didn't add details."),
     );
 
     app.replaceChildren(main, el("div", { class: "layout" }, left, right));
   }
 
-  function editForm(submittable) {
-    const panel = el("div", { class: "panel" }, el("h2", {}, "Add the details (only you have this link)"));
+  /** Every saved version, newest first; the current one is open by default. */
+  function historyPanel(history) {
+    const list = el("div", { class: "history" }, [...history].reverse().map((v, i) => {
+      const box = el("details", { open: i === 0 ? "" : false },
+        el("summary", {}, `Version ${v.version}${i === 0 ? " (current)" : ""} · `, el("span", { class: "meta" }, `${new Date(v.savedAt).toLocaleString()} · ${v.contentHash.slice(0, 12)}…`)),
+        el("div", { class: "version-body body" },
+          el("h3", {}, v.title),
+          v.summary ? el("p", { class: "summary", style: "font-size:15px" }, v.summary) : null,
+          v.body ? richText(v.body) : el("p", { class: "empty" }, "No further details."),
+          v.links?.length ? el("ul", { class: "links", style: "margin-top:10px" }, v.links.map((l) => {
+            const href = safeUrl(l.url);
+            return el("li", {}, href ? el("a", { href, target: "_blank", rel: "noreferrer nofollow" }, l.label || l.url) : l.url);
+          })) : null));
+      return box;
+    }));
+    return el("div", { class: "panel" }, el("h2", {}, `History (${history.length} versions)`), list);
+  }
+
+  function editForm({ open, current = null }) {
+    const editing = Boolean(current);
+    const panel = el("div", { class: "panel" }, el("h2", {}, editing ? "Edit the details (only you have this link)" : "Add the details (only you have this link)"));
     const win = data.detailsWindow || { graceHours: 6, windowHours: 72 };
-    if (!submittable) {
+    if (!open) {
       panel.append(el("div", { class: "notice bad" }, `It's too late to add details: the first ${win.graceHours} hours are over and people have started voting on or backing this proposal, or the ${win.windowHours}-hour window ended.`));
       return panel;
     }
     if (data.live.started) {
-      panel.append(el("div", { class: "notice", style: "margin-bottom:16px" }, `Voting has started, so submit soon: details can only be added within ${win.graceHours} hours of proposing once people are voting.`));
+      panel.append(el("div", { class: "notice", style: "margin-bottom:16px" }, editing
+        ? `Voting has started, so change them soon: once people are voting, edits are only possible within ${win.graceHours} hours of proposing.`
+        : `Voting has started, so submit soon: details can only be added within ${win.graceHours} hours of proposing once people are voting.`));
     }
-    const details = null;
+    const minLen = String(data.passwordMinLength || 8);
+    const details = current;
+    const passwordIn = el("input", { type: "password", required: true, minlength: minLen, maxlength: "200", autocomplete: editing ? "current-password" : "new-password" });
+    const confirmIn = editing ? null : el("input", { type: "password", required: true, minlength: minLen, maxlength: "200", autocomplete: "new-password" });
     const titleIn = el("input", { maxlength: "140", required: true, value: details?.title || "" });
     const summaryIn = el("textarea", { maxlength: "600", style: "min-height:80px" });
     summaryIn.value = details?.summary || "";
@@ -259,13 +295,21 @@
     };
     (details?.links || []).forEach(addLink);
     const status = el("div");
-    const save = el("button", { class: "btn btn-primary", type: "submit" }, "Submit details");
+    const save = el("button", { class: "btn btn-primary", type: "submit" }, editing ? "Save new version" : "Submit details");
 
     const form = el("form", { onsubmit: async (e) => {
       e.preventDefault();
       save.disabled = true;
-      if (!confirm("Submit these details? They can't be changed afterwards.")) { save.disabled = false; return; }
-      status.replaceChildren(el("div", { class: "notice" }, "Submitting…"));
+      if (confirmIn && confirmIn.value !== passwordIn.value) {
+        status.replaceChildren(el("div", { class: "notice bad" }, "The two passwords don't match."));
+        save.disabled = false;
+        return;
+      }
+      const question = editing
+        ? "Save this as a new version? Everyone can see every version, including the earlier ones."
+        : "Submit these details? Keep your edit password safe: it can't be recovered, and without it the details can't be changed.";
+      if (!confirm(question)) { save.disabled = false; return; }
+      status.replaceChildren(el("div", { class: "notice" }, editing ? "Saving…" : "Submitting…"));
       const links = [...linksBox.children].map((row) => ({
         label: row.querySelector('[data-k="label"]').value,
         url: row.querySelector('[data-k="url"]').value,
@@ -274,7 +318,7 @@
         const res = await fetch(endpoint, {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ token: editToken, title: titleIn.value, summary: summaryIn.value, body: bodyIn.value, links }),
+          body: JSON.stringify({ token: editToken, password: passwordIn.value, title: titleIn.value, summary: summaryIn.value, body: bodyIn.value, links }),
         });
         const out = await res.json().catch(() => ({}));
         if (!res.ok) throw new Error(out.error || `Submitting failed (${res.status}).`);
@@ -289,9 +333,16 @@
       el("label", {}, "Details — motivation, plan, costs, risks. Separate paragraphs with a blank line.", bodyIn),
       el("div", {}, el("div", { style: "font-size:14px;color:var(--text-dim);margin-bottom:6px" }, "Links"), linksBox,
         el("button", { type: "button", class: "btn btn-small", style: "margin-top:8px", onclick: () => addLink() }, "Add link")),
+      editing
+        ? el("label", {}, "Edit password — the one you chose with the first upload", passwordIn)
+        : el("div", { style: "display:flex;flex-direction:column;gap:16px" },
+          el("label", {}, `Edit password — at least ${minLen} characters. You'll need it, together with this link, to change the details later.`, passwordIn),
+          el("label", {}, "Repeat the password", confirmIn)),
       status,
       el("div", { class: "row" }, save),
-      el("p", { class: "fine" }, "You submit this once and it can't be changed afterwards, so what people support is what they read. Check it before submitting."),
+      el("p", { class: "fine" }, editing
+        ? "Each save becomes a new version. Earlier versions stay on this page, so everyone can see what changed and when. After 5 wrong passwords, editing locks for 15 minutes."
+        : "Only the proposer can change these later, with this link and the password. Every version stays visible on this page, so people can always see what changed."),
     );
     panel.append(form);
     return panel;
