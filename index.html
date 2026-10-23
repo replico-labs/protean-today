@@ -316,7 +316,7 @@
   <section class="block" id="chains">
     <div class="wrap">
       <h2>Where it runs</h2>
-      <p class="lede">Governance runs on ultra-cheap EVMs, with Solana programs live on devnet. The confidential Opportunity Market runs wherever Zama's coprocessor network actually exists today.</p>
+      <p class="lede">Governance runs on ultra-cheap EVMs, with Solana programs live on devnet and NEAR contracts live on testnet. The confidential Opportunity Market runs wherever Zama's coprocessor network actually exists today.</p>
       <div class="chain-grid">
         <div class="chain-cell">
           <div class="status live">live · testnet</div>
@@ -348,13 +348,19 @@
           <div class="role">Governance: hub + 10 models</div>
           <div class="addr">11 programs on devnet. <a href="#" onclick="showView('docs'); setTimeout(() => document.getElementById('doc-chain-solana').scrollIntoView(), 50); return false;" style="text-decoration:underline">see addresses</a></div>
         </div>
+        <div class="chain-cell">
+          <div class="status live">live · testnet</div>
+          <h3>NEAR</h3>
+          <div class="role">Governance: 9 models on Sputnik DAO</div>
+          <div class="addr">11 global contracts, published by code hash. <a href="#" onclick="showView('docs'); setTimeout(() => document.getElementById('doc-chain-near').scrollIntoView(), 50); return false;" style="text-decoration:underline">see hashes</a></div>
+        </div>
       </div>
     </div>
   </section>
 
   <footer>
     <div class="wrap foot-inner">
-      <div>Protean — the governance layer for social messengers.</div>
+      <div>Protean is the new primitive for collective digital coordination and ownership. Let’s build your community together.</div>
       <div class="foot-links">
         <a href="https://x.com/proteandaos" target="_blank" rel="noreferrer" aria-label="X (Twitter)">
           <svg viewBox="0 0 24 24" fill="none"><path d="M17.5 3H20.5L14.3 10.1L21.5 21H15.9L11.5 14.7L6.4 21H3.4L10.1 13.4L3.2 3H8.9L12.9 8.8L17.5 3Z" fill="currentColor"/></svg>
@@ -397,10 +403,11 @@
       <p>A passed proposal can already execute real onchain actions atomically through Protean's verified action library, reaching Treasury, tokens, and connected wrappers in one approved step. The planned offchain counterpart is a compliant banking tool that executes a payment the moment a DAO approves it, with no separate manual step required. Optional legal wrappers, such as a Wyoming DUNA or a Marshall Islands DAO LLC, are also available for communities that need real-world legal standing for their onchain treasury.</p>
 
       <h2 id="doc-architecture">Architecture</h2>
-      <p class="doc-lede">Four parts: the governance contracts (EVM and Solana), the bot interfaces, and this site.</p>
+      <p class="doc-lede">Four parts: the governance contracts (EVM, Solana and NEAR), the bot interfaces, and this site.</p>
       <div class="arch-diagram">
         <div class="arch-row"><span class="label">contracts</span><span class="note">Solidity: one factory per governance model, deployed with Foundry. Source in the <a href="https://github.com/replico-labs/Spaces" target="_blank" rel="noreferrer">Spaces</a> repo</span></div>
         <div class="arch-row"><span class="label">solana</span><span class="note">Anchor programs: a hub plus a program per governance model. Source in the <a href="https://github.com/replico-labs/Vortexes" target="_blank" rel="noreferrer">Vortexes</a> repo</span></div>
+        <div class="arch-row"><span class="label">near</span><span class="note">Rust: nine governance modules (Orbits) for Sputnik DAO, plus staking and token contracts, with their own bot. Source in the <a href="https://github.com/replico-labs/protean-near" target="_blank" rel="noreferrer">protean-near</a> repo</span></div>
         <div class="arch-row"><span class="label">bot</span><span class="note">Node.js (<a href="https://github.com/replico-labs/protean-bot" target="_blank" rel="noreferrer">protean-bot</a>): handles all interaction and transaction execution on Telegram, Discord, and Slack, plus an experimental WhatsApp bot</span></div>
         <div class="arch-row"><span class="label">connect</span><span class="note">This site: onboarding for people integrating the bot</span></div>
       </div>
@@ -709,7 +716,7 @@
       </table>
 
       <h2 id="doc-chains">Chains &amp; contracts</h2>
-      <p class="doc-lede">Governance runs on ultra-cheap EVMs and, on devnet, Solana; Opportunity Market runs wherever Zama's coprocessor network exists today.</p>
+      <p class="doc-lede">Governance runs on ultra-cheap EVMs, on Solana (devnet) and on NEAR (testnet); Opportunity Market runs wherever Zama's coprocessor network exists today.</p>
 
       <h3 id="doc-chain-monad">Monad testnet (chain 10143)</h3>
       <p>All ten governance factories, plus their Pyth adapters, are live and verifiable on <a href="https://testnet.monadvision.com" target="_blank" rel="noreferrer" style="color:var(--accent)">MonadVision</a>, Monad's official block explorer.</p>
@@ -787,6 +794,31 @@
         <tr><td>vortex-conviction</td><td><a href="https://explorer.solana.com/address/9sxWrySQv33tdf7WZQKW7zkDrjeq1EiphKqBgq2kxrWQ?cluster=devnet" target="_blank" rel="noreferrer" title="9sxWrySQv33tdf7WZQKW7zkDrjeq1EiphKqBgq2kxrWQ"><code>9sxW...xrWQ</code></a></td></tr>
         <tr><td>vortex-sowellian</td><td><a href="https://explorer.solana.com/address/G99YpKvNXVQmTgvXX6XGt1z3LvbEyhhDCENwat1nsrx2?cluster=devnet" target="_blank" rel="noreferrer" title="G99YpKvNXVQmTgvXX6XGt1z3LvbEyhhDCENwat1nsrx2"><code>G99Y...srx2</code></a></td></tr>
         <tr><td>vortex-decision-markets</td><td><a href="https://explorer.solana.com/address/FfUPS88Xoao8N4QTW9SGtua1XyN2q4HyBpNha7AB5t4S?cluster=devnet" target="_blank" rel="noreferrer" title="FfUPS88Xoao8N4QTW9SGtua1XyN2q4HyBpNha7AB5t4S"><code>FfUP...5t4S</code></a></td></tr>
+      </table>
+
+      <h3 id="doc-chain-near">NEAR testnet</h3>
+      <p>On NEAR, governance is built as <strong>Orbits</strong>: one governance module per model, each acting as the only member of a <a href="https://github.com/near-daos/sputnik-dao-contract" target="_blank" rel="noreferrer" style="color:var(--accent)">Sputnik DAO</a> that holds the treasury. The modules, the staking contract and the token are published once as NEAR global contracts and shared by every DAO, so they are identified by <strong>code hash</strong> and not by a contract address. A DAO's own accounts have no access keys and run exactly this code. The board model needs no orbit: it is Sputnik's own multisig. The hashes below are read from <a href="https://github.com/replico-labs/protean-near/blob/main/orbits/deployments/testnet.json" target="_blank" rel="noreferrer" style="color:var(--accent)">orbits/deployments/testnet.json</a> in the protean-near repo.</p>
+      <table class="cmd-table">
+        <tr><th>Contract</th><th>Code hash (base58)</th></tr>
+        <tr><td>Token-weighted orbit</td><td><code title="2y2w94Kk4QpkgxBTM59Doji4sh9uzfqKSb7kPU8J8zcf" style="white-space:normal;word-break:break-all;font-size:12px">2y2w94Kk4QpkgxBTM59Doji4sh9uzfqKSb7kPU8J8zcf</code></td></tr>
+        <tr><td>Quadratic orbit</td><td><code title="8YGXDXMxooQo4MY8gvEB9zLMQ13uVjCNaBFVG8Hk3P4D" style="white-space:normal;word-break:break-all;font-size:12px">8YGXDXMxooQo4MY8gvEB9zLMQ13uVjCNaBFVG8Hk3P4D</code></td></tr>
+        <tr><td>Liquid orbit</td><td><code title="K2x1JannFBEN6H5vrqXPpn2rWXNt3bQFPXYwRN1xTmH" style="white-space:normal;word-break:break-all;font-size:12px">K2x1JannFBEN6H5vrqXPpn2rWXNt3bQFPXYwRN1xTmH</code></td></tr>
+        <tr><td>Optimistic orbit</td><td><code title="8U1h1FjJf8q4WynEssacvjyK3dfJmxeZfBWRfR4jJpzQ" style="white-space:normal;word-break:break-all;font-size:12px">8U1h1FjJf8q4WynEssacvjyK3dfJmxeZfBWRfR4jJpzQ</code></td></tr>
+        <tr><td>Conviction orbit</td><td><code title="BZgs5oFbEN8T4ZRwVJ2chamVuznitABm8ZFgB6kbAdX6" style="white-space:normal;word-break:break-all;font-size:12px">BZgs5oFbEN8T4ZRwVJ2chamVuznitABm8ZFgB6kbAdX6</code></td></tr>
+        <tr><td>Delegate orbit</td><td><code title="HPvSUiDXZsDcBE511oR5xBzW3rm9TWtf8pgsGMPbjFsS" style="white-space:normal;word-break:break-all;font-size:12px">HPvSUiDXZsDcBE511oR5xBzW3rm9TWtf8pgsGMPbjFsS</code></td></tr>
+        <tr><td>Sortition orbit</td><td><code title="8CrjonQBLYSXVhpp2g8KSAAiyDaTWDn3ENUDMd7jdKGx" style="white-space:normal;word-break:break-all;font-size:12px">8CrjonQBLYSXVhpp2g8KSAAiyDaTWDn3ENUDMd7jdKGx</code></td></tr>
+        <tr><td>Sowellian orbit</td><td><code title="DeoBfxibLsvt2ssMGV28N65Ncq7ax182q9xKoUp79fv1" style="white-space:normal;word-break:break-all;font-size:12px">DeoBfxibLsvt2ssMGV28N65Ncq7ax182q9xKoUp79fv1</code></td></tr>
+        <tr><td>Decision Markets orbit</td><td><code title="rULMrsgwYJ9j1aB72sqijnF8eLRcmpz94kMGx7U1sxJ" style="white-space:normal;word-break:break-all;font-size:12px">rULMrsgwYJ9j1aB72sqijnF8eLRcmpz94kMGx7U1sxJ</code></td></tr>
+        <tr><td>Staking (one per DAO)</td><td><code title="5VuyqRFFsrwbMByjVR9CVNCwPqdAKdZHu4mZoJuhhxcj" style="white-space:normal;word-break:break-all;font-size:12px">5VuyqRFFsrwbMByjVR9CVNCwPqdAKdZHu4mZoJuhhxcj</code></td></tr>
+        <tr><td>Governance token (NEP-141)</td><td><code title="E7sPCuzLdZhno4Y1mEKXnwHeGXcVX3mzScCcy8LAdUBV" style="white-space:normal;word-break:break-all;font-size:12px">E7sPCuzLdZhno4Y1mEKXnwHeGXcVX3mzScCcy8LAdUBV</code></td></tr>
+      </table>
+      <p>Each DAO gets its own accounts. A DAO called <code>ark</code> running token-weighted governance would have:</p>
+      <table class="cmd-table">
+        <tr><th>Account</th><th>Role</th></tr>
+        <tr><td><code>ark.sputnik.protean.testnet</code></td><td>The core and treasury (Sputnik DAO)</td></tr>
+        <tr><td><code>token.ark.protean.testnet</code></td><td>The DAO's token</td></tr>
+        <tr><td><code>staking.ark.protean.testnet</code></td><td>Stakes and their history</td></tr>
+        <tr><td><code>tw.ark.protean.testnet</code></td><td>The orbit: <code>tw</code> token-weighted, <code>qv</code> quadratic, <code>lq</code> liquid, <code>op</code> optimistic, <code>cv</code> conviction, <code>dg</code> delegate, <code>st</code> sortition, <code>sw</code> Sowellian, <code>dm</code> decision markets</td></tr>
       </table>
     </div>
   </div>
