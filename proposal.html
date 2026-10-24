@@ -6,6 +6,8 @@
 <title>Proposal — Protean</title>
 <!-- The bot's public URL: it serves this page's data at /api/proposals/... -->
 <meta name="protean-api" content="https://protean-bot-production.up.railway.app">
+<!-- The NEAR bot's public URL: it serves the pages of near-* networks (/p/near-testnet/...) -->
+<meta name="protean-near-api" content="">
 <meta name="robots" content="noindex">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -139,10 +141,13 @@
 
 <script>
 (() => {
-  const API = document.querySelector('meta[name="protean-api"]').content.replace(/\/+$/, "");
   const app = document.getElementById("app");
   const parts = location.pathname.split("/").filter(Boolean); // p, network, dao, id
   const [, network, dao, id] = parts;
+  // NEAR DAOs are served by their own bot; every other network by the main one.
+  const isNear = /^near-/.test(network || "");
+  const apiMeta = (name) => (document.querySelector(`meta[name="${name}"]`)?.content || "").replace(/\/+$/, "");
+  const API = apiMeta(isNear ? "protean-near-api" : "protean-api");
   const editToken = new URLSearchParams(location.search).get("edit");
   const endpoint = `${API}/api/proposals/${encodeURIComponent(network || "")}/${encodeURIComponent(dao || "")}/${encodeURIComponent(id || "")}`;
   let data = null;
@@ -162,7 +167,8 @@
 
   const safeUrl = (u) => { try { const x = new URL(u); return x.protocol === "https:" || x.protocol === "http:" ? x.href : null; } catch { return null; } };
   const MODEL_NAMES = { tokenWeighted: "Token-weighted", quadratic: "Quadratic", liquid: "Liquid", optimistic: "Optimistic", delegate: "Delegate", board: "Board", sortition: "Sortition", conviction: "Conviction", sowellian: "Sowellian", decisionMarkets: "Decision Markets" };
-  const short = (a) => (a && a.length > 12 ? `${a.slice(0, 6)}…${a.slice(-4)}` : a || "");
+  // NEAR named accounts (ark.sputnik.protean.testnet) are shown whole: cut, they'd say nothing.
+  const short = (a) => (a && a.length > 12 && !a.includes(".") ? `${a.slice(0, 6)}…${a.slice(-4)}` : a || "");
   const when = (t) => (t ? new Date(t * 1000).toLocaleString() : "");
   // EVM explorers take /address/<a>; Solana's adds ?cluster=devnet (explorerQuery).
   const explorerLink = (live, address) => (live.explorer ? el("a", { href: `${live.explorer}/address/${address}${live.explorerQuery || ""}`, target: "_blank", rel: "noreferrer" }, short(address)) : short(address));
@@ -191,7 +197,7 @@
     document.title = `${title} — Protean`;
 
     const main = el("div", {},
-      el("div", { class: "crumbs" }, `${live.chain} · ${MODEL_NAMES[live.model] || live.model} DAO ${short(dao)} · #${live.id}`),
+      el("div", { class: "crumbs" }, `${live.chain} · ${MODEL_NAMES[live.model] || live.model} DAO ${short(live.dao || dao)} · #${live.id}`),
       el("h1", {}, title),
       details?.summary ? el("p", { class: "summary" }, details.summary) : null,
       el("div", {}, el("span", { class: stateClass(live.state) }, live.state), el("span", { class: "live" }, "Live from the chain")),
@@ -358,6 +364,10 @@
 
   if (parts[0] !== "p" || !network || !dao || !id) {
     app.replaceChildren(el("div", { class: "loading" }, "No proposal here. Proposal pages look like /p/<network>/<dao>/<id>."));
+    return;
+  }
+  if (!API) {
+    app.replaceChildren(el("div", { class: "notice bad", style: "margin-top:24px" }, "Proposal pages for this network aren't connected yet."));
     return;
   }
   load().catch((err) => app.replaceChildren(el("div", { class: "notice bad", style: "margin-top:24px" }, err.message)));
